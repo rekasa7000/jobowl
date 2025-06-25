@@ -80,12 +80,10 @@ impl JobRowBuilder {
             let app_clone = app_clone.clone();
             let refresh_callback_clone = refresh_callback_clone.clone();
             move |gesture, _n_press, _x, _y| {
-                println!("Gesture click for: {} at {}", app_clone.position, app_clone.company);
                 let widget = gesture.widget();
                 if let Some(row_widget) = widget.ancestor(gtk4::ListBoxRow::static_type()) {
                     if let Ok(row) = row_widget.downcast::<gtk4::ListBoxRow>() {
                         if let Some(window) = row.root().and_then(|r| r.downcast::<ApplicationWindow>().ok()) {
-                            println!("Found window via gesture, showing dialog");
                             DialogManager::show_job_detail(&window, &app_clone, &state_clone, refresh_callback_clone.clone());
                         }
                     }
