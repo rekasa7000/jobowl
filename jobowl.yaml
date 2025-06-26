@@ -1,0 +1,14 @@
+app-id: com.example.jobowl
+runtime: org.gnome.Platform
+runtime-version: "45"
+sdk: org.gnome.Sdk
+command: jobowl
+modules:
+  - name: jobowl
+    buildsystem: simple
+    build-commands:
+      - cargo build --release
+      - install -D target/release/jobowl /app/bin/jobowl
+    sources:
+      - type: dir
+        path: ../
