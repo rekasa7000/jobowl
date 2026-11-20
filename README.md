@@ -1,133 +1,52 @@
 # JobOwl
 
-A modern desktop job application tracker built with Rust and GTK4. JobOwl helps you manage your job search with an intuitive interface featuring clickable job listings, detailed application modals, and comprehensive tracking capabilities.
+A job-hunting desktop app for Windows that runs entirely on your own PC.
 
-## Features
+JobOwl finds job openings that match what you're looking for, tailors your resume to each one without inventing anything, and prepares the application. You approve every application before it goes out. Where a job has no application form, JobOwl writes the email for you to send.
 
-### 🎯 **Modern Interface**
-- **Clickable Job Rows**: Click any job application to view detailed information
-- **Modal Dialogs**: Edit applications, add notes, and manage details in dedicated windows
-- **Search & Filter**: Real-time search and status-based filtering at the top of the interface
-- **Date Picker**: Intuitive calendar widget for selecting application dates
-- **Status Badges**: Color-coded status indicators for quick visual reference
+No accounts. No server. No telemetry. Your resume, your data, and your API keys stay on your machine.
 
-### 📊 **Application Management**
-- **Add Applications**: Modal-based application creation with all details
-- **Status Tracking**: Update status (Applied, Interview, Offer, Rejected, Withdrawn) with automatic sorting
-- **Activity History**: Automatic tracking of all status changes and modifications
-- **Notes System**: Rich text notes for each application with full editing capabilities
-- **Delete Protection**: Safe deletion from within the detail modal
+> **Status: design phase.** This branch holds the plans for the TypeScript rewrite. The original Rust/GTK4 tracker (v0.1) is still in `src/` until milestone M0 replaces it. Start with [`docs/README.md`](docs/README.md).
 
-### 💾 **Data & Organization**
-- **Persistent Storage**: Automatic saving to JSON format
-- **Smart Sorting**: Applications sorted by status priority (Interview → Offer → Applied → Rejected → Withdrawn)
-- **Search Functionality**: Search across company names, positions, and notes
-- **Status Filtering**: Filter applications by current status
+## What it does
 
-## Prerequisites
+1. **You set up a profile once.** Upload your resume (PDF or DOCX). JobOwl turns it into a structured profile you review and correct. That profile is the source of truth: the AI can choose, reorder and rephrase what's in it, never add to it.
+2. **You say what you're looking for.** Job titles, keywords, locations, remote or on-site, salary floor, things to avoid.
+3. **Each launch, JobOwl looks for openings.** It pulls from public job-board APIs (Greenhouse, Lever, Ashby and others), aggregators, and career pages you add, then scores each job against your profile.
+4. **For jobs you shortlist, it tailors your resume.** A second AI pass checks every line against your profile and throws out anything it can't trace back.
+5. **You approve, it applies.** JobOwl fills in the application form in a visible Edge window and stops. You review it and click Submit yourself. No form? It drafts an email with your resume attached and opens it in your mail app.
+6. **It tracks everything.** Statuses, notes and history for every application, same as v0.1.
 
-- Rust (latest stable version)
-- GTK4 development libraries
+## Bring your own AI
 
-### Installing GTK4 on Linux
+Use a model running on your PC through [Ollama](https://ollama.com), a cloud model with your own API key, or both. Each AI step can use a different model. For example, a local model can score jobs and a stronger cloud model can tailor resumes.
 
-**Ubuntu/Debian:**
-```bash
-sudo apt install libgtk-4-dev build-essential
-```
+## Documentation
 
-**Fedora:**
-```bash
-sudo dnf install gtk4-devel gcc
-```
+| Doc | What it covers |
+|---|---|
+| [Product](docs/PRODUCT.md) | Goals, non-goals, features, user flows |
+| [Architecture](docs/ARCHITECTURE.md) | Processes, modules, folder layout, data flow |
+| [Data model](docs/DATA_MODEL.md) | SQLite schema and the profile format |
+| [AI pipeline](docs/AI_PIPELINE.md) | The AI layers, providers, prompts, cost control |
+| [Job sources](docs/JOB_SOURCES.md) | Where jobs come from and the rules for fetching them |
+| [Resume engine](docs/RESUME_ENGINE.md) | Import, tailoring, verification, templates |
+| [Apply and email](docs/APPLY_AND_EMAIL.md) | Form filling, approval, email drafts |
+| [Security and privacy](docs/SECURITY_PRIVACY.md) | Threat model, secrets, Electron hardening |
+| [Design](docs/DESIGN.md) | Brand, tokens, type, components, screens |
+| [Anti-slop rules](docs/ANTI_SLOP.md) | What the UI, the AI's writing and the code must never do |
+| [Testing](docs/TESTING.md) | Test layers, fixtures, the tailoring eval |
+| [Roadmap](docs/ROADMAP.md) | Milestones and acceptance criteria |
+| [Decisions](docs/adr/) | Architecture decision records |
 
-**Arch Linux:**
-```bash
-sudo pacman -S gtk4 base-devel
-```
+## Stack
 
-## Installation
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd jobowl
-```
-
-2. Build and run:
-```bash
-cargo run
-```
-
-## Usage
-
-### Getting Started
-1. **Launch JobOwl**: Run `cargo run` to start the application
-2. **Add Your First Application**: Click the "+ Add Application" button in the top toolbar
-
-### Managing Applications
-1. **Add New Applications**: 
-   - Click "+ Add Application" button
-   - Fill in company name, position, and select application date using the date picker
-   - Optionally add notes in the text area
-   - Click "Add Application" to save
-
-2. **View & Edit Applications**:
-   - Click on any job application row to open the detail modal
-   - Edit company name, position, status, and notes
-   - View complete activity history of status changes
-   - Click "Save Changes" to update or "Delete Application" to remove
-
-3. **Search & Filter**:
-   - Use the search bar to find applications by company, position, or notes
-   - Use the status dropdown to filter by application status
-   - Applications are automatically sorted by status priority
-
-4. **Track Progress**:
-   - Monitor the activity history in each application's detail view
-   - Status changes are automatically logged with timestamps
-   - Color-coded status badges provide quick visual feedback
-
-## Data Storage
-
-Application data is automatically saved to:
-- Linux: `~/.config/job-tracker/applications.json`
-- Windows: `%APPDATA%\job-tracker\applications.json`
-- macOS: `~/Library/Application Support/job-tracker/applications.json`
-
-## Architecture
-
-JobOwl is built with a modular architecture for maintainability and extensibility:
-
-```
-src/
-├── main.rs          # Application entry point and GTK4 setup
-├── models.rs        # Data structures (JobApplication, ActivityEntry)
-├── app_state.rs     # State management and data persistence
-├── dialogs.rs       # Modal dialog management (add, edit, date picker)
-└── ui.rs           # UI components (job rows, search bar, styling)
-```
-
-### Key Components
-- **Models**: Business logic and data structures with proper serialization
-- **App State**: Centralized state management with CRUD operations
-- **Dialogs**: Modal-based user interactions for all editing operations
-- **UI Components**: Reusable widgets and styling management
-
-## Dependencies
-
-- `gtk4` - GTK4 bindings for Rust GUI framework
-- `serde` & `serde_json` - JSON serialization for data persistence
-- `dirs` - Cross-platform directory paths for data storage
-- `chrono` - Date and time handling for activity tracking
+Electron, TypeScript, React, Vite, SQLite, Playwright (driving the Edge already installed on Windows). See [ADR 0001](docs/adr/0001-electron-typescript.md) for why.
 
 ## Contributing
 
-JobOwl is built with modern Rust practices and GTK4. Contributions are welcome! Please ensure:
-- Code follows the existing modular architecture
-- New features include appropriate error handling
-- UI changes maintain accessibility and usability standards
+See [CONTRIBUTING.md](CONTRIBUTING.md). Security issues: see [SECURITY.md](SECURITY.md).
 
 ## License
 
-This project is open source. Please add your preferred license.
+[MIT](LICENSE)
