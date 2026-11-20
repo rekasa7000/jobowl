@@ -26,6 +26,20 @@ import {
   saveProfileSchema,
   savedProfileSchema,
 } from './schemas/profile';
+import {
+  addSourceSchema,
+  detectedSourceSchema,
+  detectSourceSchema,
+  feedItemSchema,
+  jobDetailSchema,
+  jobFilterSchema,
+  runStatusSchema,
+  searchFieldsSchema,
+  searchPatchSchema,
+  searchSchema,
+  setJobStateSchema,
+  sourceSchema,
+} from './schemas/discovery';
 import { settingsPatchSchema, settingsSchema } from './schemas/settings';
 
 export const appInfoSchema = z.object({
@@ -53,6 +67,41 @@ export const ipcContract = {
   'ai:models': { input: listModelsSchema, output: z.array(modelInfoSchema) },
   'ai:test': { input: testModelSchema, output: testResultSchema },
   'ai:spend': { input: z.undefined(), output: spendSchema },
+  'searches:list': { input: z.undefined(), output: z.array(searchSchema) },
+  'searches:create': { input: searchFieldsSchema, output: searchSchema },
+  'searches:update': { input: searchPatchSchema, output: searchSchema },
+  'searches:delete': { input: idSchema, output: z.undefined() },
+  'sources:list': { input: z.undefined(), output: z.array(sourceSchema) },
+  'sources:detect': { input: detectSourceSchema, output: detectedSourceSchema },
+  'sources:add': { input: addSourceSchema, output: sourceSchema },
+  'sources:update': {
+    input: z.object({
+      id: idSchema,
+      patch: z
+        .object({ enabled: z.boolean(), label: z.string().trim().min(1).max(100) })
+        .partial()
+        .strict(),
+    }),
+    output: sourceSchema,
+  },
+  'sources:delete': { input: idSchema, output: z.undefined() },
+  'jobs:list': { input: jobFilterSchema, output: z.array(feedItemSchema) },
+  'jobs:get': { input: idSchema, output: jobDetailSchema },
+  'jobs:set-state': { input: setJobStateSchema, output: z.undefined() },
+  'runs:status': { input: z.undefined(), output: runStatusSchema },
+  'runs:start': { input: z.undefined(), output: runStatusSchema },
+  'integrations:status': {
+    input: z.undefined(),
+    output: z.object({ adzunaKeyHint: z.string().nullable() }),
+  },
+  'integrations:set-adzuna-key': {
+    input: z.object({ key: z.string().trim().min(1).max(200) }),
+    output: z.object({ adzunaKeyHint: z.string().nullable() }),
+  },
+  'integrations:clear-adzuna-key': {
+    input: z.undefined(),
+    output: z.object({ adzunaKeyHint: z.string().nullable() }),
+  },
   'resume:import-file': { input: z.undefined(), output: importDraftSchema.nullable() },
   'resume:import-text': { input: importTextSchema, output: importDraftSchema },
   'profile:get': { input: z.undefined(), output: savedProfileSchema.nullable() },

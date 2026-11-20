@@ -26,6 +26,13 @@ const DAY = 86_400_000;
 /** A job not returned by a successful fetch for this long is treated as closed. */
 const CLOSED_AFTER_DAYS = 3;
 
+/** A patch from the renderer may carry keys set to undefined; those mean "leave alone". */
+function definedOnly<T extends object>(patch: T): { [K in keyof T]?: Exclude<T[K], undefined> } {
+  return Object.fromEntries(Object.entries(patch).filter(([, value]) => value !== undefined)) as {
+    [K in keyof T]?: Exclude<T[K], undefined>;
+  };
+}
+
 // The return type is the caller's claim about what was stored; these columns are only written by this file.
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 const json = <T>(value: string): T => JSON.parse(value) as T;
@@ -135,10 +142,13 @@ export function createDiscoveryRepo(db: Db, clock: () => Date = () => new Date()
       );
     },
 
-    updateSearch(id: string, patch: Partial<SearchFields>): Search {
+    updateSearch(
+      id: string,
+      patch: { [K in keyof SearchFields]?: SearchFields[K] | undefined },
+    ): Search {
       const row = orm.select().from(searches).where(eq(searches.id, id)).get();
       if (!row) throw new Error('That search no longer exists.');
-      const next: SearchFields = { ...toSearch(row), ...patch };
+      const next: SearchFields = { ...toSearch(row), ...definedOnly(patch) };
       orm
         .update(searches)
         .set({
@@ -200,7 +210,10 @@ export function createDiscoveryRepo(db: Db, clock: () => Date = () => new Date()
       );
     },
 
-    updateSource(id: string, patch: { enabled?: boolean; label?: string }): Source {
+    updateSource(
+      id: string,
+      patch: { enabled?: boolean | undefined; label?: string | undefined },
+    ): Source {
       orm
         .update(sources)
         .set({

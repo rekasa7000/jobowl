@@ -1,9 +1,19 @@
 import { basename, join } from 'node:path';
 import { readFile } from 'node:fs/promises';
-import { app, BrowserWindow, dialog, safeStorage, shell, type IpcMainInvokeEvent } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  Notification,
+  safeStorage,
+  shell,
+  type IpcMainInvokeEvent,
+} from 'electron';
 import { openDb } from './db/open';
 import { registerIpc } from './ipc/register';
 import { extractInWorker } from './resume/extract-client';
+import { startScheduler } from './runs/scheduler';
+import { createHttp } from './sources/http';
 import { dataPaths } from './paths';
 
 app.setName('jobowl');
@@ -14,6 +24,20 @@ const migrationsDir = app.isPackaged
   : join(app.getAppPath(), 'drizzle');
 
 let mainWindow: BrowserWindow | null = null;
+
+/** Tests point job-board hosts at a local server. Only loopback targets are accepted. */
+function originRewrite(): ((url: string) => string) | undefined {
+  const raw = process.env['JOBOWL_ORIGIN_OVERRIDES'];
+  if (!raw) return undefined;
+  const map = Object.entries(JSON.parse(raw) as Record<string, string>).filter(([, to]) => {
+    const host = new URL(to).hostname;
+    return host === '127.0.0.1' || host === 'localhost';
+  });
+  return (url) => {
+    const hit = map.find(([from]) => url.startsWith(from));
+    return hit ? hit[1] + url.slice(hit[0].length) : url;
+  };
+}
 
 function isAllowedExternal(url: string): boolean {
   try {
@@ -81,7 +105,26 @@ async function main(): Promise<void> {
     event.sender.id === mainWindow.webContents.id &&
     event.senderFrame === event.sender.mainFrame;
 
-  registerIpc({
+  const rewrite = originRewrite();
+  const { orchestrator } = registerIpc({
+    http: createHttp({
+      userAgent: `jobowl/${app.getVersion()} (+https://github.com/rekasa7000/jobowl)`,
+      ...(rewrite ? { rewrite, hostGapMs: 0 } : {}),
+    }),
+    notify: (matches) => {
+      const top = [...matches].sort((a, b) => b.score - a.score)[0];
+      if (!top || !Notification.isSupported()) return;
+      const toast = new Notification({
+        title:
+          matches.length === 1
+            ? 'New strong match'
+            : `${String(matches.length)} new strong matches`,
+        body: `${top.title} at ${top.company} (${String(top.score)})`,
+      });
+      toast.on('click', () => mainWindow?.show());
+      toast.show();
+    },
+    setLoginItem: (openAtLogin) => app.setLoginItemSettings({ openAtLogin }),
     db,
     version: app.getVersion(),
     platform: process.platform,
@@ -113,6 +156,7 @@ async function main(): Promise<void> {
   });
 
   mainWindow = createWindow();
+  app.on('will-quit', startScheduler(orchestrator));
   mainWindow.on('closed', () => {
     mainWindow = null;
   });

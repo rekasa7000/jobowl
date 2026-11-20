@@ -1,5 +1,9 @@
 import type { IpcMainInvokeEvent } from 'electron';
 import { createAiCallsRepo } from '../db/ai-calls-repo';
+import { createDiscoveryRepo } from '../db/discovery-repo';
+import { createOrchestrator, type Orchestrator } from '../runs/orchestrator';
+import { connectors, detectSource } from '../sources/registry';
+import type { Http } from '../sources/http';
 import { createApplicationsRepo } from '../db/applications-repo';
 import type { Db } from '../db/open';
 import { createProfileRepo } from '../db/profile-repo';
@@ -25,12 +29,18 @@ export interface AppContext {
   pickResumeFile: () => Promise<{ name: string; bytes: Uint8Array } | null>;
   /** Reads resume text in a separate process. */
   extractResume: (bytes: Uint8Array) => Promise<string>;
+  /** Fetches from job sources. */
+  http: Http;
+  /** Tells you about new strong matches. */
+  notify: (matches: { title: string; company: string; score: number }[]) => void;
+  /** Turns "start with Windows" on or off. */
+  setLoginItem: (open: boolean) => void;
   /** The operating system's encryption for API keys. */
   cipher: Cipher;
   isTrusted: (event: IpcMainInvokeEvent) => boolean;
 }
 
-export function registerIpc(ctx: AppContext): void {
+export function registerIpc(ctx: AppContext): { orchestrator: Orchestrator } {
   const apps = createApplicationsRepo(ctx.db);
   const profiles = createProfileRepo(ctx.db);
   const secrets = createSecretStore(ctx.db, ctx.cipher);
@@ -42,6 +52,22 @@ export function registerIpc(ctx: AppContext): void {
     extract: ctx.extractResume,
     parse: (text) => parseResume(ai, text),
   });
+  const discovery = createDiscoveryRepo(ctx.db);
+  const orchestrator = createOrchestrator({
+    repo: discovery,
+    profile: () => {
+      const saved = profiles.current();
+      return saved ? { version: saved.version, profile: saved.profile } : null;
+    },
+    ai,
+    calls: aiCalls,
+    settings: () => readSettings(ctx.db),
+    connectors,
+    http: ctx.http,
+    secret: (name) => secrets.get(name),
+    notify: ctx.notify,
+  });
+  const adzunaHint = () => ({ adzunaKeyHint: secrets.hint('adzuna_app_key') });
   const { isTrusted } = ctx;
 
   async function aiStatus(): Promise<AiStatus> {
@@ -70,7 +96,11 @@ export function registerIpc(ctx: AppContext): void {
     schemaVersion: ctx.db.schemaVersion,
   }));
   handle('settings:get', isTrusted, () => readSettings(ctx.db));
-  handle('settings:update', isTrusted, (patch) => writeSettings(ctx.db, patch));
+  handle('settings:update', isTrusted, (patch) => {
+    const next = writeSettings(ctx.db, patch);
+    if (patch.runs) ctx.setLoginItem(next.runs.startWithWindows);
+    return next;
+  });
 
   handle('applications:list', isTrusted, (filter) => apps.list(filter));
   handle('applications:get', isTrusted, (id) => apps.get(id));
@@ -111,8 +141,60 @@ export function registerIpc(ctx: AppContext): void {
     importer.run({ name: 'pasted-resume.txt', bytes: new TextEncoder().encode(text) }),
   );
 
+  handle('searches:list', isTrusted, () => discovery.listSearches());
+  handle('searches:create', isTrusted, (fields) => discovery.createSearch(fields));
+  handle('searches:update', isTrusted, ({ id, patch }) => discovery.updateSearch(id, patch));
+  handle('searches:delete', isTrusted, (id) => {
+    discovery.deleteSearch(id);
+    return undefined;
+  });
+
+  handle('sources:list', isTrusted, () => discovery.listSources());
+  handle('sources:detect', isTrusted, ({ url }) => detectSource(url));
+  handle('sources:add', isTrusted, ({ type, config, label }) => {
+    const checked = connectors[type].configSchema.safeParse(config);
+    if (!checked.success) {
+      throw new Error(checked.error.issues[0]?.message ?? "This source's settings are incomplete.");
+    }
+    return discovery.addSource(type, config, label?.trim() || type);
+  });
+  handle('sources:update', isTrusted, ({ id, patch }) => discovery.updateSource(id, patch));
+  handle('sources:delete', isTrusted, (id) => {
+    discovery.deleteSource(id);
+    return undefined;
+  });
+
+  handle('jobs:list', isTrusted, (filter) => discovery.listJobs(filter));
+  handle('jobs:get', isTrusted, (id) => {
+    const job = discovery.getJob(id);
+    if (!job) throw new Error('That job no longer exists.');
+    return job;
+  });
+  handle('jobs:set-state', isTrusted, ({ id, state, reason }) => {
+    discovery.setJobState(id, state, reason);
+    return undefined;
+  });
+
+  handle('runs:status', isTrusted, () => orchestrator.status());
+  handle('runs:start', isTrusted, () => {
+    void orchestrator.start('manual');
+    return orchestrator.status();
+  });
+
+  handle('integrations:status', isTrusted, () => adzunaHint());
+  handle('integrations:set-adzuna-key', isTrusted, async ({ key }) => {
+    await secrets.set('adzuna_app_key', key);
+    return adzunaHint();
+  });
+  handle('integrations:clear-adzuna-key', isTrusted, () => {
+    secrets.delete('adzuna_app_key');
+    return adzunaHint();
+  });
+
   handle('legacy:detect', isTrusted, () => detectLegacy(ctx.legacyFile, apps));
   handle('legacy:import', isTrusted, ({ includeSamples }) =>
     importLegacy(ctx.legacyFile, apps, includeSamples),
   );
+
+  return { orchestrator };
 }
