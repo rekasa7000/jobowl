@@ -176,3 +176,22 @@ export const saveProfileSchema = z.object({
   /** Set when saving a draft that came from an import, so the original file is linked. */
   importId: z.string().max(64).optional(),
 });
+
+/** A draft may have no name yet; everything else follows the profile rules. The user fixes it in review. */
+export const draftProfileSchema = profileSchema.extend({
+  person: profileSchema.shape.person.extend({ fullName: z.string().max(300) }),
+});
+export type DraftProfile = z.infer<typeof draftProfileSchema>;
+
+export const importDraftSchema = z.object({
+  /** Passed back when saving, so the version records which file it came from. */
+  importId: z.string().min(1).max(64),
+  fileName: z.string(),
+  profile: draftProfileSchema,
+  /** Ids (or `person.email`, `person.fullName`) the user should check first. */
+  lowConfidence: z.array(z.string()),
+  warnings: z.array(z.string()),
+});
+export type ImportDraft = z.infer<typeof importDraftSchema>;
+
+export const importTextSchema = z.object({ text: z.string().min(40).max(100_000) });
