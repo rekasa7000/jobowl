@@ -1,4 +1,4 @@
-import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { blob, index, integer, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 /** Key/value settings. Values are JSON, validated by `settingsSchema` on every read and write. */
 export const settings = sqliteTable('settings', {
@@ -52,3 +52,33 @@ export const profileVersions = sqliteTable('profile_versions', {
   sourceSha256: text('source_sha256'),
   createdAt: text('created_at').notNull(),
 });
+
+/** API keys, encrypted by the operating system. Never exported or logged. */
+export const secrets = sqliteTable('secrets', {
+  name: text('name').primaryKey(),
+  ciphertext: blob('ciphertext', { mode: 'buffer' }).notNull(),
+  /** Last four characters, shown so you can tell which key is stored. */
+  hint: text('hint').notNull(),
+  updatedAt: text('updated_at').notNull(),
+});
+
+/** Every AI request, for cost tracking and debugging. */
+export const aiCalls = sqliteTable(
+  'ai_calls',
+  {
+    id: text('id').primaryKey(),
+    layer: text('layer').notNull(),
+    provider: text('provider').notNull(),
+    model: text('model').notNull(),
+    promptVersion: text('prompt_version').notNull(),
+    inputTokens: integer('input_tokens').notNull(),
+    outputTokens: integer('output_tokens').notNull(),
+    cachedInputTokens: integer('cached_input_tokens').notNull(),
+    /** Estimated from the price table; null when the model has no known price, 0 for local models. */
+    costUsd: real('cost_usd'),
+    durationMs: integer('duration_ms').notNull(),
+    outcome: text('outcome').notNull(),
+    createdAt: text('created_at').notNull(),
+  },
+  (table) => [index('ai_calls_created_idx').on(table.createdAt)],
+);
