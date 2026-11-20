@@ -162,7 +162,7 @@ Buttons say what they do: **Shortlist**, **Draft email**, **Approve resume**. Ne
 
 - `panel`: `--bg-secondary`, 1.5px border, 10px radius, 6px hard shadow. Holds a screen's main content blocks.
 - `readout`: the brand's telemetry panel. Used for the run status (sources, counts, cost so far, elapsed) with mono values and dashed row dividers.
-- `ticket`: the brand's ticket with a dashed stub and punched notches. **Used for the application card in the approval queue**: the top holds the job, the stub holds the action. It's the one place the ticket appears.
+- `ticket`: the brand's ticket with a dashed stub and punched notches. **Used for the application card in the approval queue**: the top holds the job, the stub holds the action. The only other place it appears is the read-only **What I sent** receipt in the tracker.
 
 ### Lists
 
@@ -251,6 +251,11 @@ Tickets, one per draft application, newest first. Ticket top: company, role, sco
 ### Applications (tracker)
 
 The v0.1 tracker, rebuilt: search, status filter chips, list sorted by status priority, detail with status selector, notes, files, and the activity timeline (mono timestamps, one line per event). **Add application** for manual entries.
+
+- **Stats readout** above the list (the brand `readout` panel): `SENT 7D`, `SENT 30D`, `RESPONSE RATE`, `INTERVIEW RATE`, `MEDIAN DAYS TO REPLY`, values in mono with big numbers in `display-md`. Clicking a stat filters the list.
+- **Tabs:** All · Sent with JobOwl · Manual. "Sent with JobOwl" rows show the channel icon (form / email), sent date, and a **No reply yet** chip (amber dashed) when it applies.
+- **What I sent** panel in the detail, for applications with a sent record: a read-only receipt in the `ticket` style, the one other place the ticket appears, because it's the stub of something that went out. It shows destination, date and channel; the resume file (open / show in folder); every field and value (or the email); before/after screenshots; the posting snapshot. A small lock icon and the label `SENT RECORD · READ-ONLY`.
+- Empty (sent tab): "Nothing sent yet." / "Applications you send from the queue are recorded here automatically."
 
 ### Profile
 

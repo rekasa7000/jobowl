@@ -87,6 +87,26 @@ These decide arguments. If a feature breaks one, the feature loses.
 
 ### F7. Application tracker
 
+Every application sent through JobOwl is recorded automatically. The user never has to log it by hand.
+
+**Automatic record of what was sent.** The moment an application is submitted (confirmation page detected, or the user confirms they sent the email), JobOwl saves a **sent record** that can't be edited afterwards:
+
+- When it was sent, how (form or email), and where to (posting URL, form URL or recipient address).
+- The exact resume file that went out (PDF/DOCX, with its checksum) and the tailored resume and profile version it was built from.
+- Every value filled into the form, including free-text answers and standard answers, or the exact email subject, body and attachments.
+- A screenshot of the filled form before submission and of the confirmation page when there is one.
+- The job posting as it was at the time, so it's still readable after the company takes it down.
+
+**Sent applications view.** A dedicated view in the tracker listing everything sent with JobOwl, filterable by date range, channel, source, search and status, with **Open what I sent** on each one (shows the record above, and opens the resume file).
+
+**Outcomes and follow-up.**
+
+- Status changes after sending (Interview, Offer, Rejected) are logged with dates.
+- **No reply yet:** applications with no status change after a configurable number of days (default 14) are marked, and the user can draft a short follow-up email (same Writer rules and checks; same `.eml` hand-off).
+- **Duplicate guard:** before applying, JobOwl warns if the user already sent an application to the same company for the same or a similar role in the last 90 days, and shows the earlier one.
+
+**Stats.** A small readout at the top of the tracker: sent this week and month, response rate (any reply / sent), interview rate, median days to first reply, and a breakdown by source and by channel. Numbers only from recorded data, no projections.
+
 Everything v0.1 did, kept:
 
 - Statuses: Draft, Applied, Interview, Offer, Rejected, Withdrawn.

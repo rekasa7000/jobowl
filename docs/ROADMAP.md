@@ -63,15 +63,16 @@ Everything v0.1 did, in the new app.
 - Contact email extraction; Writer layer with checking.
 - `.eml` generation with attachment and `X-Unsent`; open in default client; fallbacks.
 - Approval queue (tickets) for email and external applications; mark as applied.
+- Sent records, the "Sent with JobOwl" tracker view, the **What I sent** receipt, stats readout, duplicate guard, follow-up drafts.
 
-**Done when:** a draft opens as an unsent message with the PDF attached in Outlook (classic); the fallback path works when no mail client is registered.
+**Done when:** a draft opens as an unsent message with the PDF attached in Outlook (classic); the fallback path works when no mail client is registered; every confirmed send creates exactly one sent record whose resume checksum matches the file attached; the duplicate guard fires on a second application to the same company.
 
 ## M6. Form filling
 
 - Edge session via Playwright with persistent profile.
 - Fill plan screen; Greenhouse, Lever, Ashby adapters; free-text answers via Writer.
 - Generic form mapping with the Form mapper layer.
-- Confirmation detection, screenshot, status update.
+- Confirmation detection, before/after screenshots, status update, sent record with every filled value.
 - Stop-line tests on every adapter.
 
 **Done when:** for each supported ATS fixture form, every mappable field is filled, the resume attached, nothing submitted; on a live posting, the full flow from feed to filled form takes under 10 minutes.

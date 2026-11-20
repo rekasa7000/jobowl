@@ -97,6 +97,24 @@ Fallback when the default mail app doesn't respect `X-Unsent` (for example new O
 
 Once the user confirms they sent it, the application becomes `applied` with an `email_drafted` and `submitted` event.
 
+## Recording what was sent
+
+Every submission through JobOwl ends in a **sent record** (see [DATA_MODEL.md](DATA_MODEL.md#sent_records)), written in one transaction with the status change to `applied`:
+
+- **Form:** written when the confirmation page is detected, or when the user presses **I submitted it** after closing the window. The payload is the fill plan as actually filled, plus any field the user changed in the browser after filling (re-read from the page just before the confirmation navigation where possible; otherwise marked "may have been edited in the browser"). Screenshots before and after.
+- **Email:** written when the user confirms **I sent it**. The payload is the subject, body and recipients of the approved draft, and the `.eml` file is kept.
+- **Manual "Mark as applied"** on a JobOwl-prepared application still creates a sent record with the prepared resume and values, flagged `confirmed_by: user`.
+
+The record is read-only in the UI. If something was wrong, the user adds a note; the record itself stays as sent.
+
+### Duplicate guard
+
+Before **Open and fill** or **Draft email**, JobOwl checks sent records for the same company (normalised name or same ATS board) in the last 90 days. If found, it shows the earlier application (role, date, status) and asks the user to confirm before continuing.
+
+### Follow-ups
+
+Applications with no status change after N days (default 14, setting) show **No reply yet** in the tracker. **Draft follow-up** uses the Writer (≤ 80 words, references the role and the date applied, no new claims) and the same `.eml` hand-off. Confirming it was sent adds a `follow_up` sent record. JobOwl suggests at most one follow-up per application.
+
 ## External and manual applications
 
 For jobs with no fillable form and no email (or sources JobOwl doesn't fetch), the queue item gives **Open posting**, the resume files, and copy buttons for each standard answer. **Mark as applied** records it.

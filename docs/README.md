@@ -43,4 +43,5 @@ Architecture decision records live in [`adr/`](adr/). Each one is short: context
 | **Tailored resume** | A resume built for one job from profile items, verified line by line. |
 | **Application** | A job the user has applied to (or is preparing to), with status and history. Carries over from v0.1. |
 | **Layer** | One AI step in the pipeline (Parser, Scorer, Tailor, Checker, Writer, Form mapper). Each can use a different model. |
+| **Sent record** | The read-only receipt of exactly what JobOwl sent for an application: resume file and checksum, every filled value or the email, screenshots, posting snapshot. Created automatically on submission. |
 | **Approval queue** | Where prepared applications wait for the user to review and submit. |

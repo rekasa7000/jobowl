@@ -198,6 +198,33 @@ Carries the v0.1 tracker forward.
 | submission_screenshot_id | TEXT FK files NULL | |
 | created_at, updated_at | TEXT | |
 
+Additional columns for tracking: `sent_at TEXT NULL` (set by the sent record), `last_activity_at TEXT` (latest event, used for the "no reply yet" marker), `follow_up_count INTEGER` (follow-up emails drafted and confirmed sent).
+
+### `sent_records`
+
+The immutable record of exactly what JobOwl sent, one per submission (an application can have more than one if the user also emails a follow-up or re-applies). Written once in a transaction when submission is confirmed; never updated. Deleting the application is the only way to remove it.
+
+| Column | Type | Notes |
+|---|---|---|
+| id | TEXT PK | |
+| application_id | TEXT FK applications | |
+| kind | TEXT | `application` \| `follow_up` |
+| channel | TEXT | `form` \| `email` |
+| sent_at | TEXT | confirmation time (form) or the time the user confirmed sending (email) |
+| confirmed_by | TEXT | `confirmation_page` \| `user` |
+| destination | TEXT | form URL, or recipient address |
+| payload | TEXT (JSON `SentPayload`) | form: every field label and the value filled, with its origin (`profile` \| `standard_answer` \| `writer` \| `user_edit`); email: subject, body, recipients |
+| resume_file_id | TEXT FK files NULL | the exact file attached |
+| resume_sha256 | TEXT NULL | copied from `files` so the record proves which bytes went out |
+| tailored_resume_id | TEXT FK NULL | |
+| profile_version | INTEGER NULL | |
+| other_file_ids | TEXT (JSON string[]) | cover letter, `.eml`, extra attachments |
+| before_screenshot_id | TEXT FK files NULL | filled form, before the user clicked submit |
+| after_screenshot_id | TEXT FK files NULL | confirmation page |
+| posting_snapshot | TEXT | the job's title, company, URL and description Markdown at send time |
+
+Files referenced by a sent record are excluded from retention clean-up.
+
 ### `application_events`
 
 The activity history from v0.1, generalised.
@@ -207,7 +234,7 @@ The activity history from v0.1, generalised.
 | id | TEXT PK | |
 | application_id | TEXT FK | |
 | at | TEXT | |
-| kind | TEXT | `created` \| `status_changed` \| `edited` \| `note` \| `form_filled` \| `email_drafted` \| `submitted` |
+| kind | TEXT | `created` \| `status_changed` \| `edited` \| `note` \| `form_filled` \| `email_drafted` \| `submitted` \| `follow_up_drafted` \| `follow_up_sent` |
 | details | TEXT (JSON) | e.g. `{ "from": "applied", "to": "interview" }` |
 
 ### `files`

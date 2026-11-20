@@ -15,7 +15,7 @@ No accounts. No server. No telemetry. Your resume, your data, and your API keys 
 3. **Each launch, JobOwl looks for openings.** It pulls from public job-board APIs (Greenhouse, Lever, Ashby and others), aggregators, and career pages you add, then scores each job against your profile.
 4. **For jobs you shortlist, it tailors your resume.** A second AI pass checks every line against your profile and throws out anything it can't trace back.
 5. **You approve, it applies.** JobOwl fills in the application form in a visible Edge window and stops. You review it and click Submit yourself. No form? It drafts an email with your resume attached and opens it in your mail app.
-6. **It tracks everything.** Statuses, notes and history for every application, same as v0.1.
+6. **It tracks everything you send.** Every application sent through JobOwl is recorded automatically with exactly what went out: the resume file, every answer, the email, screenshots, and the posting as it was. Statuses, notes, history, follow-up reminders and simple stats (response rate, time to reply) sit on top, along with anything you applied to outside the app.
 
 ## Bring your own AI
 
