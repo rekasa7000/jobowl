@@ -115,7 +115,7 @@ describe('settings repository', () => {
       ...defaultSettings.ai,
       layers: { parser: { provider: 'ollama' as const, model: 'llama3.1' } },
     };
-    expect(writeSettings(db, { ai })).toEqual({ theme: 'light', ai });
+    expect(writeSettings(db, { ai })).toEqual({ ...defaultSettings, theme: 'light', ai });
   });
 
   it('falls back to the default when a stored value is corrupt', async () => {
