@@ -13,11 +13,16 @@ import {
 const migrations = join(import.meta.dirname, '../../drizzle');
 
 /** Stands in for Windows encryption: reversible, and visibly not the plain text. */
-function fakeCipher(available = true): Cipher {
+function fakeCipher(available = true, rotated = false): Cipher {
   return {
-    isAvailable: () => available,
-    encrypt: (plain) => Buffer.from(`enc:${[...plain].reverse().join('')}`),
-    decrypt: (data) => [...data.toString().slice(4)].reverse().join(''),
+    isAvailable: () => Promise.resolve(available),
+    encrypt: (plain) =>
+      Promise.resolve(Buffer.from(`enc:${Buffer.from(plain).toString('base64')}`)),
+    decrypt: (data) =>
+      Promise.resolve({
+        text: Buffer.from(data.toString().slice(4), 'base64').toString(),
+        reEncrypt: rotated,
+      }),
   };
 }
 
@@ -35,42 +40,62 @@ afterEach(() => {
 });
 
 describe('secret store', () => {
-  it('round-trips a key and shows only the last four characters as a hint', () => {
+  it('round-trips a key and shows only the last four characters as a hint', async () => {
     const store = createSecretStore(db, fakeCipher());
-    store.set('anthropic_api_key', 'sk-ant-abcdef1234');
-    expect(store.get('anthropic_api_key')).toBe('sk-ant-abcdef1234');
+    await store.set('anthropic_api_key', 'sk-ant-abcdef1234');
+    expect(await store.get('anthropic_api_key')).toBe('sk-ant-abcdef1234');
     expect(store.hint('anthropic_api_key')).toBe('1234');
   });
 
-  it('never writes the key itself to the database', () => {
-    createSecretStore(db, fakeCipher()).set('openai_api_key', 'sk-very-secret-value');
+  it('never writes the key itself to the database', async () => {
+    await createSecretStore(db, fakeCipher()).set('openai_api_key', 'sk-very-secret-value');
     const rows = db.sqlite.prepare('select * from secrets').all() as Record<string, unknown>[];
     expect(JSON.stringify(rows)).not.toContain('sk-very-secret-value');
   });
 
-  it('replaces an existing key', () => {
+  it('replaces an existing key', async () => {
     const store = createSecretStore(db, fakeCipher());
-    store.set('openai_api_key', 'first-0001');
-    store.set('openai_api_key', 'second-0002');
-    expect(store.get('openai_api_key')).toBe('second-0002');
+    await store.set('openai_api_key', 'first-0001');
+    await store.set('openai_api_key', 'second-0002');
+    expect(await store.get('openai_api_key')).toBe('second-0002');
     expect(store.hint('openai_api_key')).toBe('0002');
   });
 
-  it('forgets a deleted key', () => {
+  it('forgets a deleted key', async () => {
     const store = createSecretStore(db, fakeCipher());
-    store.set('openai_api_key', 'abc-1234');
+    await store.set('openai_api_key', 'abc-1234');
     store.delete('openai_api_key');
-    expect(store.get('openai_api_key')).toBeNull();
+    expect(await store.get('openai_api_key')).toBeNull();
     expect(store.hint('openai_api_key')).toBeNull();
   });
 
-  it('refuses to store a key when the system cannot encrypt, rather than saving plain text', () => {
+  it('refuses to store a key when the system cannot encrypt, rather than saving plain text', async () => {
     const store = createSecretStore(db, fakeCipher(false));
-    expect(() => store.set('openai_api_key', 'abc')).toThrow(SecretsUnavailableError);
+    await expect(store.set('openai_api_key', 'abc')).rejects.toThrow(SecretsUnavailableError);
     expect(db.sqlite.prepare('select count(*) as n from secrets').get()).toEqual({ n: 0 });
   });
 
-  it('reports a missing key as null', () => {
-    expect(createSecretStore(db, fakeCipher()).get('nothing')).toBeNull();
+  it('reports a missing key as null', async () => {
+    expect(await createSecretStore(db, fakeCipher()).get('nothing')).toBeNull();
+  });
+
+  it('saves a key again when the system says its encryption key has rotated', async () => {
+    await createSecretStore(db, fakeCipher()).set('openai_api_key', 'sk-keep-me-9999');
+    const before = db.sqlite.prepare('select updated_at from secrets').get() as {
+      updated_at: string;
+    };
+
+    const rotated = createSecretStore(
+      db,
+      fakeCipher(true, true),
+      () => new Date(Date.now() + 60_000),
+    );
+    expect(await rotated.get('openai_api_key')).toBe('sk-keep-me-9999');
+
+    const after = db.sqlite.prepare('select updated_at from secrets').get() as {
+      updated_at: string;
+    };
+    expect(after.updated_at).not.toBe(before.updated_at);
+    expect(rotated.hint('openai_api_key')).toBe('9999');
   });
 });

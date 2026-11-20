@@ -8,14 +8,14 @@ const pong = z.object({ ok: z.boolean() });
 
 /** Sends one tiny request so the user can see a provider, key and model work before relying on them. */
 export async function testModel(
-  makeProvider: () => LlmProvider,
+  makeProvider: () => Promise<LlmProvider>,
   choice: LayerChoice,
   calls: AiCallsRepo,
 ): Promise<TestResult> {
   const started = performance.now();
   const elapsed = () => Math.round(performance.now() - started);
   try {
-    const provider = makeProvider();
+    const provider = await makeProvider();
     const result = await provider.generateObject({
       model: choice.model,
       system: 'Answer with JSON only.',

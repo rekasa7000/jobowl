@@ -47,7 +47,7 @@ afterEach(() => {
 function services(provider: LlmProvider, ai: Partial<AiSettings> = {}): AiServices {
   return {
     getSettings: () => ({ ...defaultAiSettings, ...ai }),
-    providerFor: () => provider,
+    providerFor: () => Promise.resolve(provider),
     calls,
   };
 }
@@ -116,7 +116,9 @@ describe('runLayer', () => {
     const spend = calls.spendThisMonth();
     expect(spend.calls).toBe(1);
     expect(spend.monthUsd).toBeCloseTo(0.018, 6);
-    expect(spend.byLayer).toEqual([{ layer: 'parser', calls: 1, usd: expect.closeTo(0.018, 6) }]);
+    expect(spend.byLayer).toHaveLength(1);
+    expect(spend.byLayer[0]).toMatchObject({ layer: 'parser', calls: 1 });
+    expect(spend.byLayer[0]?.usd).toBeCloseTo(0.018, 6);
   });
 
   it('still logs a failed call, and what it cost when the model had already answered', async () => {
@@ -152,16 +154,14 @@ describe('testModel', () => {
 
   it('reports success and logs the call under "test"', async () => {
     const provider = fake(() => Promise.resolve({ value: { ok: true }, usage }));
-    const result = await testModel(() => provider, choice, calls);
+    const result = await testModel(() => Promise.resolve(provider), choice, calls);
     expect(result.ok).toBe(true);
     expect(calls.spendThisMonth().byLayer[0]?.layer).toBe('test');
   });
 
   it('turns a missing key into a readable failure instead of throwing', async () => {
     const result = await testModel(
-      () => {
-        throw new NotConfiguredError('Add your Anthropic API key in Settings.');
-      },
+      () => Promise.reject(new NotConfiguredError('Add your Anthropic API key in Settings.')),
       choice,
       calls,
     );
@@ -170,7 +170,7 @@ describe('testModel', () => {
 
   it('turns a provider error into a readable failure', async () => {
     const provider = fake(() => Promise.reject(new Error('401 invalid x-api-key')));
-    expect(await testModel(() => provider, choice, calls)).toMatchObject({
+    expect(await testModel(() => Promise.resolve(provider), choice, calls)).toMatchObject({
       ok: false,
       error: '401 invalid x-api-key',
     });

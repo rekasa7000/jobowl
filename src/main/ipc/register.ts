@@ -11,7 +11,7 @@ import { parseResume } from '../ai/layers/parser';
 import { createImporter } from '../resume/importer';
 import { dataPaths } from '../paths';
 import { createSecretStore, type Cipher } from '../secrets/secret-store';
-import { providerIdSchema, type AiStatus, type KeyProvider } from '@shared/schemas/ai';
+import { providerIdSchema, type AiStatus } from '@shared/schemas/ai';
 import { handle } from './handle';
 
 export interface AppContext {
@@ -44,10 +44,10 @@ export function registerIpc(ctx: AppContext): void {
   });
   const { isTrusted } = ctx;
 
-  function aiStatus(): AiStatus {
+  async function aiStatus(): Promise<AiStatus> {
     const ai = readSettings(ctx.db).ai;
     return {
-      secretsAvailable: secrets.available(),
+      secretsAvailable: await secrets.available(),
       providers: providerIdSchema.options.map((id) => {
         const needsKey = id !== 'ollama';
         const keyHint = needsKey ? secrets.hint(SECRET_NAMES[id]) : null;
@@ -82,15 +82,17 @@ export function registerIpc(ctx: AppContext): void {
   });
 
   handle('ai:status', isTrusted, () => aiStatus());
-  handle('ai:set-key', isTrusted, ({ provider, key }) => {
-    secrets.set(SECRET_NAMES[provider as KeyProvider], key);
+  handle('ai:set-key', isTrusted, async ({ provider, key }) => {
+    await secrets.set(SECRET_NAMES[provider], key);
     return aiStatus();
   });
   handle('ai:clear-key', isTrusted, ({ provider }) => {
     secrets.delete(SECRET_NAMES[provider]);
     return aiStatus();
   });
-  handle('ai:models', isTrusted, ({ provider }) => providerFor(provider).listModels());
+  handle('ai:models', isTrusted, async ({ provider }) =>
+    (await providerFor(provider)).listModels(),
+  );
   handle('ai:test', isTrusted, (choice) =>
     testModel(() => providerFor(choice.provider), choice, aiCalls),
   );

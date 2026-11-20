@@ -16,7 +16,7 @@ import type { ProviderId } from '@shared/schemas/ai';
 
 export interface AiServices {
   getSettings: () => AiSettings;
-  providerFor: (id: ProviderId) => LlmProvider;
+  providerFor: (id: ProviderId) => Promise<LlmProvider>;
   calls: AiCallsRepo;
 }
 
@@ -50,7 +50,7 @@ export async function runLayer<T>(
       `Choose a model for the ${LAYER_LABELS[layer].name} in Settings before using this.`,
     );
   }
-  const provider = ai.providerFor(choice.provider);
+  const provider = await ai.providerFor(choice.provider);
   const started = performance.now();
   const record = (usage: Usage, outcome: CallOutcome) =>
     ai.calls.record({

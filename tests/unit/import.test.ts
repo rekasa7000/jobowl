@@ -52,7 +52,7 @@ function ai(answer: () => unknown = adaParse, configured = true): AiServices {
       ...defaultAiSettings,
       layers: configured ? { parser: { provider: 'ollama', model: 'llama3.1' } } : {},
     }),
-    providerFor: () => provider,
+    providerFor: () => Promise.resolve(provider),
     calls: createAiCallsRepo(db),
   };
 }
@@ -116,10 +116,9 @@ describe('importer', () => {
     const imp = importer();
     const bytes = new Uint8Array(readFileSync(join(fixtures, 'ada-lovelace.txt')));
     const draft = await imp.run({ name: 'ada.txt', bytes });
-    expect(imp.sourceFor(draft.importId)).toMatchObject({
-      name: 'ada.txt',
-      sha256: expect.stringMatching(/^[0-9a-f]{64}$/),
-    });
+    const source = imp.sourceFor(draft.importId);
+    expect(source?.name).toBe('ada.txt');
+    expect(source?.sha256).toMatch(/^[0-9a-f]{64}$/);
     expect(imp.sourceFor('unknown')).toBeUndefined();
   });
 

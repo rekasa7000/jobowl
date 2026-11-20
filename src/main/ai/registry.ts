@@ -19,17 +19,17 @@ export const SECRET_NAMES: Record<KeyProvider, string> = {
 export function createProviderFactory(
   getSettings: () => AiSettings,
   secrets: SecretStore,
-): (id: ProviderId) => LlmProvider {
-  return (id) => {
+): (id: ProviderId) => Promise<LlmProvider> {
+  return async (id) => {
     const settings = getSettings();
     switch (id) {
       case 'anthropic': {
-        const apiKey = secrets.get(SECRET_NAMES.anthropic);
+        const apiKey = await secrets.get(SECRET_NAMES.anthropic);
         if (!apiKey) throw new NotConfiguredError('Add your Anthropic API key in Settings.');
         return createAnthropicProvider(new Anthropic({ apiKey }));
       }
       case 'openai': {
-        const apiKey = secrets.get(SECRET_NAMES.openai);
+        const apiKey = await secrets.get(SECRET_NAMES.openai);
         if (!apiKey) throw new NotConfiguredError('Add your OpenAI API key in Settings.');
         return createOpenAiProvider(new OpenAI({ apiKey }), 'openai');
       }
@@ -40,7 +40,7 @@ export function createProviderFactory(
           );
         }
         // Many local servers need no key, but the client insists on a non-empty one.
-        const apiKey = secrets.get(SECRET_NAMES.openai_compatible) ?? 'not-needed';
+        const apiKey = (await secrets.get(SECRET_NAMES.openai_compatible)) ?? 'not-needed';
         return createOpenAiProvider(
           new OpenAI({ apiKey, baseURL: settings.compatibleUrl }),
           'openai_compatible',

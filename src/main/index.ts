@@ -102,9 +102,12 @@ async function main(): Promise<void> {
     },
     // Windows encrypts keys for this user account (DPAPI). Without it, keys aren't stored at all.
     cipher: {
-      isAvailable: () => safeStorage.isEncryptionAvailable(),
-      encrypt: (plain) => safeStorage.encryptString(plain),
-      decrypt: (encrypted) => safeStorage.decryptString(encrypted),
+      isAvailable: () => safeStorage.isAsyncEncryptionAvailable(),
+      encrypt: (plain) => safeStorage.encryptStringAsync(plain),
+      decrypt: async (encrypted) => {
+        const { result, shouldReEncrypt } = await safeStorage.decryptStringAsync(encrypted);
+        return { text: result, reEncrypt: shouldReEncrypt };
+      },
     },
     isTrusted,
   });
