@@ -336,3 +336,27 @@ textarea.input {
 .btn-quiet:hover {
   color: var(--accent-text);
 }
+
+/* An item the import could not match to the resume: a danger bar, the reason above it. */
+.needs-check {
+  border-left: 3px solid var(--danger);
+  padding-left: 0.75rem;
+}
+
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details > summary::after {
+  content: '+';
+  font-family: var(--font-mono);
+  color: var(--text-tertiary);
+}
+details[open] > summary::after {
+  content: '–';
+}
+details > summary {
+  justify-content: space-between;
+}
