@@ -26,7 +26,7 @@ export const layerSchema = z.enum([
 export type Layer = z.infer<typeof layerSchema>;
 
 /** Layers that exist in this release. The rest join as their milestones land. */
-export const ACTIVE_LAYERS: readonly Layer[] = ['parser'];
+export const ACTIVE_LAYERS: readonly Layer[] = ['parser', 'scorer'];
 
 export const LAYER_LABELS: Record<Layer, { name: string; job: string }> = {
   parser: { name: 'Parser', job: 'Reads your resume into a draft profile' },
