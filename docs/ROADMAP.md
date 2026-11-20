@@ -44,6 +44,8 @@ Everything v0.1 did, in the new app.
 
 ## M3. Discovery
 
+**Status: built, never run against a live job board.** Sources, searches, hard filters, the scorer, runs (on launch, on a timer and on demand), the feed and the Windows toast are done and covered by unit and end-to-end tests that use a local fake job board and a fake model server. The seven connectors follow each provider's documented response shape from memory, because the sandbox this was built in can't reach those hosts; expect to fix small mismatches the first time each runs for real. Not done: the scorer eval over hand-scored jobs (it needs a real model and a labelled set), a tray icon for start-minimised, and the `careers_page` and `web_search` connectors, which stay in M7.
+
 - Source connectors: Greenhouse, Lever, Ashby, Remotive, RemoteOK, Arbeitnow, Adzuna.
 - Add-source-by-URL detection.
 - Searches screen; hard filters; dedupe.

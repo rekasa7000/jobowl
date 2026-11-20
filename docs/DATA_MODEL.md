@@ -134,7 +134,9 @@ The current profile is the highest `version`.
 | url | TEXT | canonical posting URL |
 | apply_url | TEXT NULL | form URL if different |
 | apply_kind | TEXT | `greenhouse_form` \| `lever_form` \| `ashby_form` \| `generic_form` \| `email` \| `external` \| `unknown` |
-| contact_email | TEXT NULL | extracted from the posting text when present |
+| url_key | TEXT | the URL without tracking noise, for spotting the same posting from two sources |
+| injection_flag | INTEGER (bool) | the posting reads like an instruction to an AI |
+| contact_email | TEXT NULL | *not built yet (M5):* extracted from the posting text when present |
 | company | TEXT | |
 | title | TEXT | |
 | location | TEXT NULL | |
@@ -165,7 +167,7 @@ Indexes: `(user_state, state)`, `(company)`, `(first_seen_at)`, `(content_hash)`
 | ai_call_id | TEXT FK ai_calls | |
 | created_at | TEXT | |
 
-`UNIQUE(job_id, search_id, profile_version)`. A job matched by several searches shows its best score in the feed.
+`UNIQUE(job_id, search_id)`: one row per job and search, replaced when a re-score is due. Alongside the score it records `profile_version`, `prompt_version` and `content_hash`; a job is scored again only when one of them changes. A job matched by several searches shows its best score in the feed.
 
 ### `tailored_resumes`
 

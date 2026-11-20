@@ -146,6 +146,7 @@ Secrets are stored in the database, encrypted with `safeStorage` (Windows DPAPI,
 
 - One contract file (`shared/ipc-contract.ts`) lists every channel with Zod schemas for input and output. Preload, main handlers and renderer hooks are all typed from it.
 - Request/response uses `ipcRenderer.invoke` / `ipcMain.handle`. Main validates input, runs, validates output.
+- **As built in M3, run progress is polled:** the renderer asks `runs:status` once a second while a run is going. The events channel below arrives when something needs push (apply sessions).
 - Main pushes events (run progress, job counts, apply-session state) on a single `events` channel with a discriminated-union payload; the renderer subscribes once and updates TanStack Query caches.
 - Channel names are `area:verb`, for example `jobs:list`, `jobs:dismiss`, `tailor:generate`, `apply:open`, `settings:update`.
 - No channel accepts a file path or URL from the renderer without checking it against an allowlist (paths inside the data folder; http/https URLs only).

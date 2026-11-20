@@ -111,8 +111,10 @@ type ScoreResult = {
 ```
 
 - Input uses a **profile digest**: titles, dates, skills and bullet text, but not contact details or standard answers. The Scorer doesn't need them.
-- Evidence must reference real profile item IDs; unknown IDs are dropped in post-processing and the score is recomputed from what remains.
-- The final score shown is the model's score adjusted by deterministic rules: any dealbreaker caps it at 30; a hard-filter near-miss (salary just under the floor) is noted, not hidden.
+- Evidence must reference real profile item IDs. *As built:* an unknown id is dropped, and a match left with no evidence becomes a minor gap. The score is multiplied by the share of matches that survive, capped at 25 when none do, and capped at 30 when there is a dealbreaker. A posting that talks the model into a perfect score therefore ends up near zero.
+- The model's output schema leaves out the verdict; code derives it from the final score (75 strong, 50 possible, 25 weak, below that no).
+- A job is scored again only when the profile version, the prompt version or the posting text changes. Scoring stops at the monthly AI limit (0 means no limit), after five failures in a row, or after 150 jobs in one run.
+- Not built yet: a hard-filter near-miss note, and the scorer eval in [TESTING.md](TESTING.md).
 - Dismiss reasons from the user (last 20) are included as preferences: "Not interested in agency roles".
 
 ### Tailor

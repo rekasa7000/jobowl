@@ -51,6 +51,10 @@ Users add companies by pasting a careers URL. jobowl recognises the ATS from the
 
 Aggregator results often link to an ATS. When an `apply_url` resolves to a Greenhouse, Lever or Ashby posting, jobowl sets the matching `apply_kind` so the form can be filled.
 
+### Status in M3
+
+Built: `greenhouse`, `lever`, `ashby`, `remotive`, `remoteok`, `arbeitnow`, `adzuna`. Not built: `workable`, `smartrecruiters`, `careers_page`, `web_search` (M7). Fixtures follow the documented shapes and have not been checked against live responses. A response in an unknown shape is reported as such instead of producing partial data, and an entry that doesn't parse is counted and skipped. Posting HTML is converted to plain text and always shown as text. Jobs a source stops listing for three days are marked closed.
+
 ### Career pages (`careers_page`)
 
 For companies not on a supported ATS. The user adds the URL of a careers page.
@@ -84,10 +88,10 @@ If a user pastes a posting URL from one of them, jobowl offers **Import manually
 Applies to every connector, enforced by the shared HTTP client, not left to each connector:
 
 - User-Agent: `jobowl/<version> (+https://github.com/rekasa7000/jobowl)`. Honest, no browser impersonation.
-- robots.txt is fetched and cached per host for 24 hours and respected for non-API fetches.
+- robots.txt is fetched and respected for non-API page fetches. The M3 connectors only call documented public APIs, so this arrives with `careers_page`.
 - Per-host rate limit (default 30 requests/minute, lower when a source's terms say so) and at most 4 hosts fetched in parallel.
 - Conditional requests (`If-None-Match` / `If-Modified-Since`) where supported.
-- Backoff on 429 and 5xx, honouring `Retry-After`. Three failures in a row disable the source until the next run.
+- Backoff on 429 and 5xx, honouring `Retry-After`. Three failed attempts in one fetch end that source's fetch for the run; it is tried again next run.
 - 403, CAPTCHA pages and bot challenges are treated as "this site doesn't want us": the source is marked `blocked` and not retried automatically. No workarounds.
 - Timeouts: 15 s connect, 30 s total per request.
 
