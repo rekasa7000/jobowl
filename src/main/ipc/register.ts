@@ -1,6 +1,7 @@
 import type { IpcMainInvokeEvent } from 'electron';
 import { createApplicationsRepo } from '../db/applications-repo';
 import type { Db } from '../db/open';
+import { createProfileRepo } from '../db/profile-repo';
 import { readSettings, writeSettings } from '../db/settings-repo';
 import { detectLegacy, importLegacy } from '../legacy/import';
 import { handle } from './handle';
@@ -17,6 +18,7 @@ export interface AppContext {
 
 export function registerIpc(ctx: AppContext): void {
   const apps = createApplicationsRepo(ctx.db);
+  const profiles = createProfileRepo(ctx.db);
   const { isTrusted } = ctx;
 
   handle('app:info', isTrusted, () => ({
@@ -37,6 +39,10 @@ export function registerIpc(ctx: AppContext): void {
     apps.remove(id);
     return undefined;
   });
+
+  handle('profile:get', isTrusted, () => profiles.current());
+  handle('profile:versions', isTrusted, () => profiles.list());
+  handle('profile:save', isTrusted, ({ profile, note }) => profiles.save(profile, note));
 
   handle('legacy:detect', isTrusted, () => detectLegacy(ctx.legacyFile, apps));
   handle('legacy:import', isTrusted, ({ includeSamples }) =>

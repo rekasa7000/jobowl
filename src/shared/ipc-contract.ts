@@ -9,6 +9,7 @@ import {
   listFilterSchema,
   updateApplicationSchema,
 } from './schemas/application';
+import { profileVersionSchema, saveProfileSchema, savedProfileSchema } from './schemas/profile';
 import { settingsPatchSchema, settingsSchema } from './schemas/settings';
 
 export const appInfoSchema = z.object({
@@ -30,6 +31,9 @@ export const ipcContract = {
   'applications:create': { input: createApplicationSchema, output: applicationDetailSchema },
   'applications:update': { input: updateApplicationSchema, output: applicationDetailSchema },
   'applications:delete': { input: idSchema, output: z.undefined() },
+  'profile:get': { input: z.undefined(), output: savedProfileSchema.nullable() },
+  'profile:versions': { input: z.undefined(), output: z.array(profileVersionSchema) },
+  'profile:save': { input: saveProfileSchema, output: savedProfileSchema },
   'legacy:detect': { input: z.undefined(), output: legacyDetectSchema },
   'legacy:import': {
     input: z.object({ includeSamples: z.boolean() }),
