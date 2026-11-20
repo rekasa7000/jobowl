@@ -1,0 +1,48 @@
+/* Brand tokens from docs/DESIGN.md. Components use the semantic names, never the hex values. */
+:root {
+  --brand-teal: #013230;
+  --brand-cream: #f3ebdd;
+  --brand-orange: #ff6a1f;
+
+  --bg-primary: #f3ebdd;
+  --bg-secondary: #fbf6ec;
+  --bg-sunken: #ebe1cf;
+  --bg-hover: rgba(1, 50, 48, 0.05);
+  --text-primary: #013230;
+  --text-secondary: #2f5552;
+  --text-tertiary: #4f6a65;
+  --border-color: #dccfb9;
+  --border-strong: #013230;
+  --accent: #ff6a1f;
+  --accent-text: #b0400c;
+  --accent-soft: rgba(255, 106, 31, 0.12);
+  --accent-2: #0d5c57;
+  --accent-3: #f0a431;
+  --signal: #1a6b4a;
+  --danger: #b3261e;
+  --on-accent: #013230;
+  --shadow-hard: #013230;
+  --stripe: rgba(1, 50, 48, 0.035);
+}
+
+.dark {
+  --bg-primary: #013230;
+  --bg-secondary: #06403d;
+  --bg-sunken: #012826;
+  --bg-hover: rgba(243, 235, 221, 0.06);
+  --text-primary: #f3ebdd;
+  --text-secondary: #b9c7bb;
+  --text-tertiary: #8fa9a3;
+  --border-color: #0f4d49;
+  --border-strong: #3d7a74;
+  --accent: #ff6a1f;
+  --accent-text: #ff6a1f;
+  --accent-soft: rgba(255, 106, 31, 0.16);
+  --accent-2: #f3ebdd;
+  --accent-3: #ffb347;
+  --signal: #9be0b5;
+  --danger: #ff8a7a;
+  --on-accent: #013230;
+  --shadow-hard: rgba(255, 106, 31, 0.35);
+  --stripe: rgba(243, 235, 221, 0.028);
+}

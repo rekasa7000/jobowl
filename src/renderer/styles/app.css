@@ -1,0 +1,62 @@
+@import 'tailwindcss';
+@import './tokens.css';
+@import './components.css';
+
+/* Only the brand tokens exist as utilities: no default Tailwind palette. */
+@theme inline {
+  --color-*: initial;
+  --color-bg: var(--bg-primary);
+  --color-raised: var(--bg-secondary);
+  --color-sunken: var(--bg-sunken);
+  --color-ink: var(--text-primary);
+  --color-ink-2: var(--text-secondary);
+  --color-ink-3: var(--text-tertiary);
+  --color-line: var(--border-color);
+  --color-line-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-signal: var(--signal);
+  --color-danger: var(--danger);
+  --font-sans: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Anton', 'Arial Narrow', Impact, sans-serif;
+  --font-accent: 'Fraunces', Georgia, serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  background-color: var(--bg-primary);
+  background-image: repeating-linear-gradient(90deg, var(--stripe) 0 2px, transparent 2px 16px);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -11,7 +11,7 @@ The parts most likely to hurt the user are the ones that look fine at a glance: 
 | AI layer | Vitest + fake provider | Prompt building, output validation, repair path, post-processing (ID checks, revert logic) | Every commit |
 | Database | Vitest + temp SQLite file | Migrations up from empty and from every previous release's schema; repositories | Every commit |
 | Form adapter | Playwright (no Electron) | Each adapter against saved HTML of real forms served locally; asserts fields filled and **no submit click** | Every commit |
-| End-to-end | Playwright `_electron` | Launch the built app: onboarding with a fake provider, run against fixture sources, shortlist, tailor, approve, queue, mark applied | CI on Windows |
+| End-to-end | Playwright `_electron` | Launch the built output (`out/`; installed builds have the debugging fuses off): onboarding with a fake provider, run against fixture sources, shortlist, tailor, approve, queue, mark applied | CI on Windows |
 | Tailoring eval | Custom runner, real providers | Fabrication and quality checks on real models | Manually, before changing a prompt or default model |
 
 No test hits the live network. The shared HTTP client has a test mode that fails on any request not served by a fixture.

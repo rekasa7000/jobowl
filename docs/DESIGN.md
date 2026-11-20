@@ -106,7 +106,7 @@ Colour is never the only signal: every status also has a label, and verdicts hav
 
 ## Typography
 
-All fonts are bundled from `resources/fonts` (SIL Open Font License). No runtime font downloads.
+The UI's fonts are bundled into the renderer from the `@fontsource` packages (SIL Open Font License). No runtime font downloads.
 
 | Role | Family | Use |
 |---|---|---|

@@ -16,6 +16,7 @@ Requirements: Windows 10/11 (macOS and Linux work for development, but Windows i
 pnpm install
 pnpm dev          # run the app with hot reload
 pnpm test         # unit + integration tests
+pnpm build && pnpm test:e2e   # end-to-end tests against the built app
 pnpm lint         # ESLint + Prettier check
 pnpm typecheck
 pnpm build:win    # build the Windows installer into dist/

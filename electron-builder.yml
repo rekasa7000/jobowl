@@ -1,0 +1,36 @@
+appId: com.rekasa7000.jobowl
+productName: jobowl
+copyright: Copyright (c) 2025-2026 Regee Casaña
+directories:
+  output: dist
+  buildResources: build
+files:
+  - out/**
+  - resources/icons/jobowl.png
+  - package.json
+extraResources:
+  - from: drizzle
+    to: drizzle
+asar: true
+# better-sqlite3 is N-API: one prebuilt binary works in Node and Electron, so nothing to recompile.
+npmRebuild: false
+artifactName: jobowl-${version}-setup.${ext}
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: build/icon.png
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  shortcutName: jobowl
+# Hardening from docs/SECURITY_PRIVACY.md. These apply to packaged builds only.
+electronFuses:
+  runAsNode: false
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: false
+  enableEmbeddedAsarIntegrityValidation: true
+  onlyLoadAppFromAsar: true
+  enableCookieEncryption: true

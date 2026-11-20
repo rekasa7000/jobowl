@@ -4,6 +4,8 @@ Milestones are ordered so each one leaves a usable app. Each has acceptance crit
 
 ## M0. Foundation
 
+**Status: built, Windows installer not yet verified.** The app, database, theme, security settings and tests are done and pass on Linux, including a packaged build that launches, migrates and backs up. The NSIS installer and the per-user install check run in CI on Windows and haven't been run yet.
+
 Replace the Rust/GTK4 code with the TypeScript scaffold.
 
 - Electron + electron-vite + React + TypeScript strict, pnpm, ESLint/Prettier, Vitest.

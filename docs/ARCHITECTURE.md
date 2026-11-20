@@ -43,10 +43,10 @@ jobowl is a single Electron app with no backend. Everything runs in three kinds 
 |---|---|
 | Runtime | Electron (current stable at M0; upgrade each major within 8 weeks) |
 | Language | TypeScript, `strict: true` |
-| Build | electron-vite (main, preload and renderer bundles) |
+| Build | electron-vite on Vite 8 (main, preload and renderer bundles) |
 | Packaging | electron-builder → NSIS installer, per-user install, no admin rights |
 | Updates | electron-updater against GitHub Releases (opt-in, see [ROADMAP](ROADMAP.md)) |
-| UI | React, React Router (memory router), TanStack Query over IPC |
+| UI | React, TanStack Query over IPC; React Router (memory router) joins with the second screen in M1 |
 | Styling | Tailwind CSS v4 with the brand tokens from [DESIGN.md](DESIGN.md); Radix primitives for accessible dialogs, menus, popovers |
 | Icons | Lucide |
 | Database | SQLite via better-sqlite3, Drizzle ORM and drizzle-kit migrations |
@@ -67,9 +67,9 @@ jobowl is a single Electron app with no backend. Everything runs in three kinds 
 ```
 jobowl/
 ├─ docs/                      # this documentation
-├─ resources/                 # icons, bundled fonts, default templates (shipped as-is)
+├─ resources/                 # icons and default templates (shipped as-is)
 │  ├─ icons/
-│  ├─ fonts/                  # Anton, Space Grotesk, Fraunces, Space Mono (OFL)
+│  ├─ fonts/                  # added with the resume templates (M4); the UI's fonts come from @fontsource
 │  └─ templates/              # resume + email templates
 ├─ src/
 │  ├─ shared/                 # imported by main AND renderer: types only, no Node, no DOM
@@ -109,6 +109,15 @@ Rules for the layout:
 - `shared/` has no runtime dependencies except Zod. If renderer code needs something from main, it goes through IPC.
 - Every connector, AI layer and form adapter is a folder with its own tests and fixtures beside it.
 - No barrel files that re-export everything; import from the module that owns the thing.
+
+## Build notes
+
+Things that are easy to get wrong, learned while building M0:
+
+- **Preload is CommonJS and self-contained.** Sandboxed preload scripts can't be ES modules and can't `require` packages, so electron-vite emits `preload/index.cjs` and bundles zod into it.
+- **One SQLite binary for Node and Electron.** better-sqlite3 13 uses N-API, so the prebuilt binary works in both. electron-builder runs with `npmRebuild: false`; there is nothing to recompile.
+- **Migrations ship as a resource.** The `drizzle/` folder is copied next to the app (`resources/drizzle`) and found through `process.resourcesPath` when packaged.
+- **Fuses apply to packaged builds only.** `runAsNode`, Node CLI inspect flags and the Node options variable are off in the installer, so end-to-end tests drive the built output (`out/`), not the installed app.
 
 ## Data location
 

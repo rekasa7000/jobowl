@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>jobowl</title>
+  <rect width="500" height="500" rx="110" fill="#013230"/>
+  <g stroke="#f3ebdd" stroke-width="20">
+    <!-- left brow and eye -->
+    <path d="M40 130 C 90 112 150 120 200 175"/>
+    <circle cx="140" cy="250" r="82"/>
+    <circle cx="140" cy="250" r="24" stroke-width="16"/>
+    <path d="M470 128 C 430 112 388 120 352 150"/>
+    <!-- beak -->
+    <path d="M205 255 L 250 385 L 295 255"/>
+    <!-- right pupil, seen through the lens -->
+    <circle cx="360" cy="250" r="24" stroke-width="16"/>
+  </g>
+  <!-- lens and handle -->
+  <circle cx="360" cy="250" r="88" stroke="#ff6a1f" stroke-width="22"/>
+  <path d="M424 314 L 462 352" stroke="#ff6a1f" stroke-width="28"/>
+</svg>
