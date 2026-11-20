@@ -1,0 +1,27 @@
+{
+  "data": [
+    {
+      "slug": "rust-dev-berlin",
+      "company_name": "Berlin GmbH",
+      "title": "Rust Developer",
+      "description": "<p>Systems.</p>",
+      "remote": false,
+      "url": "https://www.arbeitnow.com/jobs/rust-dev-berlin",
+      "location": "Berlin",
+      "job_types": ["Full Time"],
+      "created_at": 1748900000
+    },
+    {
+      "slug": "ops-remote",
+      "company_name": "Cloud AG",
+      "title": "DevOps",
+      "description": "<p>Ops.</p>",
+      "remote": true,
+      "url": "https://www.arbeitnow.com/jobs/ops-remote",
+      "location": "Germany",
+      "created_at": 1748900100
+    }
+  ],
+  "links": {},
+  "meta": {}
+}

@@ -1,0 +1,27 @@
+{
+  "jobs": [
+    {
+      "id": "j1",
+      "title": "Staff Backend Engineer",
+      "jobUrl": "https://jobs.ashbyhq.com/acme/j1",
+      "applyUrl": "https://jobs.ashbyhq.com/acme/j1/application",
+      "location": "Remote (APAC)",
+      "isListed": true,
+      "isRemote": true,
+      "workplaceType": "Remote",
+      "employmentType": "FullTime",
+      "descriptionPlain": "Build the API.",
+      "publishedAt": "2025-05-25T00:00:00.000+00:00",
+      "compensation": {
+        "compensationTierSummary": "$150K \u2013 $180K \u2022 Offers Equity"
+      }
+    },
+    {
+      "id": "j2",
+      "title": "Hidden role",
+      "jobUrl": "https://jobs.ashbyhq.com/acme/j2",
+      "isListed": false,
+      "descriptionPlain": "Not public."
+    }
+  ]
+}

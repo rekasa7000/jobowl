@@ -1,0 +1,27 @@
+[
+  {
+    "legal": "Please link back to remoteok.com when you use this data."
+  },
+  {
+    "id": "9001",
+    "url": "https://remoteok.com/remote-jobs/9001",
+    "position": "Full Stack Engineer",
+    "company": "Hooli",
+    "location": "Worldwide",
+    "description": "<p>Full stack.</p>",
+    "date": "2025-06-05T12:00:00+00:00",
+    "salary_min": 100000,
+    "salary_max": 140000,
+    "apply_url": "https://remoteok.com/l/9001"
+  },
+  {
+    "id": "9002",
+    "url": "https://remoteok.com/remote-jobs/9002",
+    "position": "Designer",
+    "company": "Pied Piper",
+    "description": "<p>Design.</p>",
+    "date": "2025-06-05T13:00:00+00:00",
+    "salary_min": 0,
+    "salary_max": 0
+  }
+]

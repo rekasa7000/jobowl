@@ -1,0 +1,34 @@
+{
+  "count": 2,
+  "results": [
+    {
+      "id": "5551",
+      "title": "Software Engineer",
+      "redirect_url": "https://www.adzuna.co.uk/land/ad/5551",
+      "description": "Join us to build things <b>remotely</b>\u2026",
+      "created": "2025-06-01T09:00:00Z",
+      "salary_min": 65000,
+      "salary_max": 80000,
+      "contract_type": "permanent",
+      "company": {
+        "display_name": "Umbrella Ltd"
+      },
+      "location": {
+        "display_name": "Leeds, West Yorkshire"
+      }
+    },
+    {
+      "id": "5552",
+      "title": "QA Analyst",
+      "redirect_url": "https://www.adzuna.co.uk/land/ad/5552",
+      "description": "Test things.",
+      "created": "2025-06-02T09:00:00Z",
+      "company": {
+        "display_name": "Cyberdyne"
+      },
+      "location": {
+        "display_name": "London"
+      }
+    }
+  ]
+}

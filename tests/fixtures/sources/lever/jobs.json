@@ -1,0 +1,48 @@
+[
+  {
+    "id": "a1",
+    "text": "Platform Engineer",
+    "hostedUrl": "https://jobs.lever.co/acme/a1",
+    "applyUrl": "https://jobs.lever.co/acme/a1/apply",
+    "categories": {
+      "location": "Manila",
+      "commitment": "Full-time"
+    },
+    "workplaceType": "remote",
+    "descriptionPlain": "Run the platform.",
+    "lists": [
+      {
+        "text": "Requirements",
+        "content": "<li>Kubernetes</li><li>Go</li>"
+      }
+    ],
+    "additionalPlain": "We are an equal opportunity employer.",
+    "createdAt": 1748000000000,
+    "salaryRange": {
+      "min": 90000,
+      "max": 120000,
+      "currency": "USD",
+      "interval": "per-year-salary"
+    }
+  },
+  {
+    "id": "a2",
+    "text": "Support Agent",
+    "hostedUrl": "https://jobs.lever.co/acme/a2",
+    "categories": {
+      "location": "Cebu"
+    },
+    "workplaceType": "on-site",
+    "description": "<p>Help customers.</p>",
+    "salaryRange": {
+      "min": 20,
+      "max": 25,
+      "currency": "USD",
+      "interval": "per-hour-wage"
+    }
+  },
+  {
+    "id": "a3",
+    "text": "No link here"
+  }
+]

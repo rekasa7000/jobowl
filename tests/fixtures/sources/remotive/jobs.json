@@ -1,0 +1,27 @@
+{
+  "job-count": 2,
+  "jobs": [
+    {
+      "id": 7001,
+      "url": "https://remotive.com/remote-jobs/software-dev/react-dev-7001",
+      "title": "React Developer",
+      "company_name": "Globex",
+      "category": "Software Development",
+      "job_type": "full_time",
+      "publication_date": "2025-06-03T08:00:00",
+      "candidate_required_location": "Worldwide",
+      "salary": "$80k - $100k",
+      "description": "<p>Build UI.</p>"
+    },
+    {
+      "id": 7002,
+      "url": "https://remotive.com/remote-jobs/software-dev/node-dev-7002",
+      "title": "Node Developer",
+      "company_name": "Initech",
+      "publication_date": "2025-06-04T08:00:00",
+      "candidate_required_location": "USA Only",
+      "salary": "",
+      "description": "<p>Build APIs.</p>"
+    }
+  ]
+}
