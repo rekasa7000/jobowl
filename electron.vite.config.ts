@@ -21,7 +21,19 @@ function devCsp(): Plugin {
 }
 
 export default defineConfig({
-  main: { resolve: { alias } },
+  main: {
+    resolve: { alias },
+    build: {
+      rolldownOptions: {
+        // The resume reader runs in its own utility process, so it is its own entry point.
+        input: {
+          index: resolve('src/main/index.ts'),
+          'workers/extract': resolve('src/main/workers/extract.ts'),
+        },
+        output: { entryFileNames: '[name].js' },
+      },
+    },
+  },
   // Sandboxed preload scripts must be CommonJS and can't require() packages, so zod is bundled in.
   preload: {
     resolve: { alias },
