@@ -63,7 +63,7 @@ Everything v0.1 did, in the new app.
 - Contact email extraction; Writer layer with checking.
 - `.eml` generation with attachment and `X-Unsent`; open in default client; fallbacks.
 - Approval queue (tickets) for email and external applications; mark as applied.
-- Sent records, the "Sent with JobOwl" tracker view, the **What I sent** receipt, stats readout, duplicate guard, follow-up drafts.
+- Sent records, the "Sent with jobowl" tracker view, the **What I sent** receipt, stats readout, duplicate guard, follow-up drafts.
 
 **Done when:** a draft opens as an unsent message with the PDF attached in Outlook (classic); the fallback path works when no mail client is registered; every confirmed send creates exactly one sent record whose resume checksum matches the file attached; the duplicate guard fires on a second application to the same company.
 

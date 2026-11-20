@@ -1,6 +1,6 @@
 # Anti-slop rules
 
-"Slop" is output that looks produced rather than made: generic UI, filler copy, résumé clichés, AI-sounding prose, and code that's long without doing more. JobOwl is especially exposed. It's an AI app, often built with AI help, and it writes things that a hiring manager reads in 30 seconds and judges a person by.
+"Slop" is output that looks produced rather than made: generic UI, filler copy, résumé clichés, AI-sounding prose, and code that's long without doing more. jobowl is especially exposed. It's an AI app, often built with AI help, and it writes things that a hiring manager reads in 30 seconds and judges a person by.
 
 These rules are binding. Reviews (human or AI) check against them. Part B is also enforced in code by the slop linter.
 
@@ -14,7 +14,7 @@ Never:
 
 - Purple-to-blue (or any) gradients on buttons, headers or backgrounds.
 - Glassmorphism: frosted blur panels, translucent cards over blurred backgrounds.
-- Soft, blurry drop shadows. JobOwl's shadows are hard offsets ([DESIGN.md](DESIGN.md#space-shape-depth)).
+- Soft, blurry drop shadows. jobowl's shadows are hard offsets ([DESIGN.md](DESIGN.md#space-shape-depth)).
 - "Card soup": every piece of content in its own rounded-2xl card with the same shadow. Use lists, rules and whitespace; panels group, they don't decorate.
 - Sparkle icons (✨) or "magic wand" icons to mean AI. AI features are labelled by what they do: **Tailor**, **Score**, **Draft email**.
 - Emoji as icons or in UI copy.

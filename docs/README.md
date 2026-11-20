@@ -1,10 +1,10 @@
-# JobOwl documentation
+# jobowl documentation
 
-These documents are the plan for JobOwl v1, the TypeScript rewrite. They come before the code: when code and docs disagree, one of them is a bug, and the fix lands in the same change.
+These documents are the plan for jobowl v1, the TypeScript rewrite. They come before the code: when code and docs disagree, one of them is a bug, and the fix lands in the same change.
 
 ## Read in this order
 
-1. [PRODUCT.md](PRODUCT.md): what JobOwl is for, what it won't do, the main flows.
+1. [PRODUCT.md](PRODUCT.md): what jobowl is for, what it won't do, the main flows.
 2. [ARCHITECTURE.md](ARCHITECTURE.md): how the pieces fit, the folder layout, the run pipeline.
 3. [DATA_MODEL.md](DATA_MODEL.md): the SQLite schema and the profile format everything else depends on.
 4. Whichever subsystem you're working on:
@@ -43,5 +43,5 @@ Architecture decision records live in [`adr/`](adr/). Each one is short: context
 | **Tailored resume** | A resume built for one job from profile items, verified line by line. |
 | **Application** | A job the user has applied to (or is preparing to), with status and history. Carries over from v0.1. |
 | **Layer** | One AI step in the pipeline (Parser, Scorer, Tailor, Checker, Writer, Form mapper). Each can use a different model. |
-| **Sent record** | The read-only receipt of exactly what JobOwl sent for an application: resume file and checksum, every filled value or the email, screenshots, posting snapshot. Created automatically on submission. |
+| **Sent record** | The read-only receipt of exactly what jobowl sent for an application: resume file and checksum, every filled value or the email, screenshots, posting snapshot. Created automatically on submission. |
 | **Approval queue** | Where prepared applications wait for the user to review and submit. |

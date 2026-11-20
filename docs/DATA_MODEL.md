@@ -11,7 +11,7 @@ Conventions:
 
 ## The profile
 
-The profile is the most important structure in the app: it's the only source of facts for anything JobOwl writes. It's stored whole, as a versioned JSON document, because it's always read and written as a unit and versions must be immutable.
+The profile is the most important structure in the app: it's the only source of facts for anything jobowl writes. It's stored whole, as a versioned JSON document, because it's always read and written as a unit and versions must be immutable.
 
 ```ts
 // src/shared/schemas/profile.ts (shape; Zod is the real definition)
@@ -202,7 +202,7 @@ Additional columns for tracking: `sent_at TEXT NULL` (set by the sent record), `
 
 ### `sent_records`
 
-The immutable record of exactly what JobOwl sent, one per submission (an application can have more than one if the user also emails a follow-up or re-applies). Written once in a transaction when submission is confirmed; never updated. Deleting the application is the only way to remove it.
+The immutable record of exactly what jobowl sent, one per submission (an application can have more than one if the user also emails a follow-up or re-applies). Written once in a transaction when submission is confirmed; never updated. Deleting the application is the only way to remove it.
 
 | Column | Type | Notes |
 |---|---|---|

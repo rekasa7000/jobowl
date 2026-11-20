@@ -1,12 +1,12 @@
 # Security and privacy
 
-JobOwl holds the most personal document most people have (their resume), contact details, answers to legal and demographic questions, and API keys that cost money. It runs on one PC for one person. The design goal: **nothing leaves the machine except to a destination the user configured, and nothing the web sends back can make JobOwl act.**
+jobowl holds the most personal document most people have (their resume), contact details, answers to legal and demographic questions, and API keys that cost money. It runs on one PC for one person. The design goal: **nothing leaves the machine except to a destination the user configured, and nothing the web sends back can make jobowl act.**
 
 ## What leaves the PC
 
 | Destination | What is sent | When |
 |---|---|---|
-| Job source APIs and career pages | HTTP GET requests with JobOwl's User-Agent; search terms for aggregators | During runs |
+| Job source APIs and career pages | HTTP GET requests with jobowl's User-Agent; search terms for aggregators | During runs |
 | The AI provider for each layer | Profile digest or full profile, job text, form labels | During scoring, tailoring, writing |
 | Ollama on `127.0.0.1` | Same as above, but stays on the PC | Same |
 | Job sites, in the Edge window | Whatever the user approved in the fill plan | When the user presses **Fill** |
@@ -60,7 +60,7 @@ Following Electron's security checklist:
 ## Secrets
 
 - Stored in the `secrets` table, encrypted with `safeStorage.encryptString`. On Windows this uses DPAPI, tied to the logged-in user.
-- If `safeStorage.isEncryptionAvailable()` is false, JobOwl refuses to store keys and says why, instead of falling back to plain text.
+- If `safeStorage.isEncryptionAvailable()` is false, jobowl refuses to store keys and says why, instead of falling back to plain text.
 - Keys are decrypted only in main, only when building a provider client, and never sent to the renderer. The UI shows `sk-ant-…4f2a` style masks.
 - Exports and backups never include the `secrets` table.
 

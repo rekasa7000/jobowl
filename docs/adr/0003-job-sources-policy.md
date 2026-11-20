@@ -16,11 +16,11 @@ Sources, in order of preference:
 3. AI extraction from career pages that allow crawling per robots.txt.
 4. Optional web search for ATS-hosted postings, then fetching them through the ATS API.
 
-JobOwl never fetches from sites whose terms prohibit it, never solves CAPTCHAs, never rotates proxies or spoofs browsers, and treats a block as a "no". Users can paste postings from those sites manually.
+jobowl never fetches from sites whose terms prohibit it, never solves CAPTCHAs, never rotates proxies or spoofs browsers, and treats a block as a "no". Users can paste postings from those sites manually.
 
 ## Consequences
 
 - Fewer total jobs than a scraper that ignores the rules; better data, no breakage chasing anti-bot changes, no risk to the user's accounts.
-- ATS-hosted jobs lead to forms JobOwl can fill, which suits the apply flow.
+- ATS-hosted jobs lead to forms jobowl can fill, which suits the apply flow.
 - The user curates companies to watch; web search discovery helps them find more.
 - Every connector documents its endpoint and the terms it relies on.

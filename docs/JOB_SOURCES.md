@@ -26,7 +26,7 @@ interface SourceConnector<Config> {
 
 ### Applicant tracking system boards (company-specific)
 
-Many companies publish their openings through ATS job boards with public, documented, read-only JSON endpoints. These are the best sources: complete, structured, legal, and they link straight to forms JobOwl can fill.
+Many companies publish their openings through ATS job boards with public, documented, read-only JSON endpoints. These are the best sources: complete, structured, legal, and they link straight to forms jobowl can fill.
 
 | Connector | Endpoint (public, no key) | Config | Apply kind |
 |---|---|---|---|
@@ -38,7 +38,7 @@ Many companies publish their openings through ATS job boards with public, docume
 
 Endpoint details are confirmed against each provider's current public docs when the connector is built; the connector's fixtures record the real response shape.
 
-Users add companies by pasting a careers URL. JobOwl recognises the ATS from the URL (`boards.greenhouse.io/acme`, `jobs.lever.co/acme`, `jobs.ashbyhq.com/acme`) and creates the source. JobOwl ships with no preloaded company list: what to watch is the user's choice.
+Users add companies by pasting a careers URL. jobowl recognises the ATS from the URL (`boards.greenhouse.io/acme`, `jobs.lever.co/acme`, `jobs.ashbyhq.com/acme`) and creates the source. jobowl ships with no preloaded company list: what to watch is the user's choice.
 
 ### Aggregators (search-based)
 
@@ -49,7 +49,7 @@ Users add companies by pasting a careers URL. JobOwl recognises the ATS from the
 | `arbeitnow` | Public API | |
 | `adzuna` | Free API key | Many countries; user enters app id and key. Search parameters come from the user's searches. |
 
-Aggregator results often link to an ATS. When an `apply_url` resolves to a Greenhouse, Lever or Ashby posting, JobOwl sets the matching `apply_kind` so the form can be filled.
+Aggregator results often link to an ATS. When an `apply_url` resolves to a Greenhouse, Lever or Ashby posting, jobowl sets the matching `apply_kind` so the form can be filled.
 
 ### Career pages (`careers_page`)
 
@@ -66,24 +66,24 @@ For companies not on a supported ATS. The user adds the URL of a careers page.
 Finds postings across many companies without the user listing them, by searching for ATS-hosted postings: `site:boards.greenhouse.io "frontend engineer" remote`, `site:jobs.lever.co …`, `site:jobs.ashbyhq.com …`. Queries are built from the user's searches.
 
 - Needs a search API the user chooses and pays for (for example Brave Search API, or the web search tool of their AI provider when it has one). Off by default.
-- Results are only used when they resolve to a supported ATS posting; JobOwl then fetches the posting through that ATS's public API, not by scraping the search result.
+- Results are only used when they resolve to a supported ATS posting; jobowl then fetches the posting through that ATS's public API, not by scraping the search result.
 - Discovered companies are offered to the user as new sources ("Add Acme's Greenhouse board?").
 
 This is how "the AI searches the web for jobs" works without breaking anyone's terms.
 
-## What JobOwl won't fetch
+## What jobowl won't fetch
 
-These sites prohibit automated access in their terms and actively block it. JobOwl has no connector for them and won't merge one:
+These sites prohibit automated access in their terms and actively block it. jobowl has no connector for them and won't merge one:
 
 - LinkedIn, Indeed, Glassdoor, ZipRecruiter, JobStreet, Monster, and similar boards.
 
-If a user pastes a posting URL from one of them, JobOwl offers **Import manually**: open the page in the user's normal browser, copy the description, paste it into JobOwl. The job is then scored and tailored like any other; applying is done by hand.
+If a user pastes a posting URL from one of them, jobowl offers **Import manually**: open the page in the user's normal browser, copy the description, paste it into jobowl. The job is then scored and tailored like any other; applying is done by hand.
 
 ## Fetch etiquette
 
 Applies to every connector, enforced by the shared HTTP client, not left to each connector:
 
-- User-Agent: `JobOwl/<version> (+https://github.com/rekasa7000/jobowl)`. Honest, no browser impersonation.
+- User-Agent: `jobowl/<version> (+https://github.com/rekasa7000/jobowl)`. Honest, no browser impersonation.
 - robots.txt is fetched and cached per host for 24 hours and respected for non-API fetches.
 - Per-host rate limit (default 30 requests/minute, lower when a source's terms say so) and at most 4 hosts fetched in parallel.
 - Conditional requests (`If-None-Match` / `If-Modified-Since`) where supported.

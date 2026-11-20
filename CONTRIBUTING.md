@@ -1,6 +1,6 @@
-# Contributing to JobOwl
+# Contributing to jobowl
 
-JobOwl is a personal tool that's open source so anyone can run their own copy. Contributions are welcome if they fit the [product principles](docs/PRODUCT.md#principles).
+jobowl is a personal tool that's open source so anyone can run their own copy. Contributions are welcome if they fit the [product principles](docs/PRODUCT.md#principles).
 
 ## Before you start
 

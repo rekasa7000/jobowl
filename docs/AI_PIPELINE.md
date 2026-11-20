@@ -1,6 +1,6 @@
 # AI pipeline
 
-JobOwl uses AI for reading and writing, never for deciding to act. Every AI step takes data in and returns validated data out. No AI step can submit, send, browse, or read files.
+jobowl uses AI for reading and writing, never for deciding to act. Every AI step takes data in and returns validated data out. No AI step can submit, send, browse, or read files.
 
 ## Layers
 

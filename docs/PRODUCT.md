@@ -4,7 +4,7 @@
 
 Job hunting is repetitive work that punishes cutting corners. You check the same boards every day, skim dozens of postings to find the few that fit, rewrite your resume for each one, and fill in the same form fields again and again. Tools that automate this either spray low-quality applications everywhere, invent experience to game keyword filters, or need you to hand your data to someone's server.
 
-## What JobOwl is
+## What jobowl is
 
 A Windows desktop app that does the legwork of a job search on your own PC, with you in charge of every decision that matters:
 
@@ -25,7 +25,7 @@ It is open source so anyone can run their own copy. It is not multi-user, not a 
 These decide arguments. If a feature breaks one, the feature loses.
 
 1. **True or nothing.** Every fact on a generated resume, cover note or form answer traces back to the user's profile. The AI chooses, orders and rephrases; it never adds. ([ADR 0004](adr/0004-profile-is-source-of-truth.md))
-2. **The user presses send.** JobOwl never submits an application or sends an email by itself. ([ADR 0005](adr/0005-human-approval-for-outbound-actions.md))
+2. **The user presses send.** jobowl never submits an application or sends an email by itself. ([ADR 0005](adr/0005-human-approval-for-outbound-actions.md))
 3. **Your machine, your data.** No accounts, no server, no telemetry. Data leaves the PC only to reach a job source or an AI provider the user configured. ([ADR 0007](adr/0007-local-only.md))
 4. **Polite on the web.** Use public APIs and structured data. Respect terms of service and robots.txt. No CAPTCHA solving or bot evasion. ([ADR 0003](adr/0003-job-sources-policy.md))
 5. **Fewer, better applications.** The product optimises for applications that are a real fit and read like a person wrote them, not for volume.
@@ -62,7 +62,7 @@ These decide arguments. If a feature breaks one, the feature loses.
 - A run starts automatically when the app launches if the last run is older than the configured interval (default 6 hours), and on demand with **Run now**.
 - A run fetches from every enabled source, deduplicates, applies hard filters, then scores the survivors.
 - Progress is visible while it runs: which source, how many jobs, how many new, errors.
-- Optional: start JobOwl with Windows (minimised to tray) so the run happens when you log in.
+- Optional: start jobowl with Windows (minimised to tray) so the run happens when you log in.
 
 ### F4. Job feed
 
@@ -81,15 +81,15 @@ These decide arguments. If a feature breaks one, the feature loses.
 ### F6. Approval queue and applying
 
 - Approving a tailored resume creates an **application draft** in the queue.
-- If the job has a supported application form: **Open and fill** launches Edge, fills the form, attaches the resume, drafts answers to free-text questions (shown in JobOwl for approval first), and stops. The user reviews and clicks Submit in the browser. JobOwl detects the confirmation page, or the user marks it submitted.
+- If the job has a supported application form: **Open and fill** launches Edge, fills the form, attaches the resume, drafts answers to free-text questions (shown in jobowl for approval first), and stops. The user reviews and clicks Submit in the browser. jobowl detects the confirmation page, or the user marks it submitted.
 - If there's no form but there is a contact email: **Draft email** writes a short email, attaches the resume, and opens it in the default mail app as an unsent draft.
 - If neither: the application stays in the queue with the posting link and the files ready.
 
 ### F7. Application tracker
 
-Every application sent through JobOwl is recorded automatically. The user never has to log it by hand.
+Every application sent through jobowl is recorded automatically. The user never has to log it by hand.
 
-**Automatic record of what was sent.** The moment an application is submitted (confirmation page detected, or the user confirms they sent the email), JobOwl saves a **sent record** that can't be edited afterwards:
+**Automatic record of what was sent.** The moment an application is submitted (confirmation page detected, or the user confirms they sent the email), jobowl saves a **sent record** that can't be edited afterwards:
 
 - When it was sent, how (form or email), and where to (posting URL, form URL or recipient address).
 - The exact resume file that went out (PDF/DOCX, with its checksum) and the tailored resume and profile version it was built from.
@@ -97,13 +97,13 @@ Every application sent through JobOwl is recorded automatically. The user never 
 - A screenshot of the filled form before submission and of the confirmation page when there is one.
 - The job posting as it was at the time, so it's still readable after the company takes it down.
 
-**Sent applications view.** A dedicated view in the tracker listing everything sent with JobOwl, filterable by date range, channel, source, search and status, with **Open what I sent** on each one (shows the record above, and opens the resume file).
+**Sent applications view.** A dedicated view in the tracker listing everything sent with jobowl, filterable by date range, channel, source, search and status, with **Open what I sent** on each one (shows the record above, and opens the resume file).
 
 **Outcomes and follow-up.**
 
 - Status changes after sending (Interview, Offer, Rejected) are logged with dates.
 - **No reply yet:** applications with no status change after a configurable number of days (default 14) are marked, and the user can draft a short follow-up email (same Writer rules and checks; same `.eml` hand-off).
-- **Duplicate guard:** before applying, JobOwl warns if the user already sent an application to the same company for the same or a similar role in the last 90 days, and shows the earlier one.
+- **Duplicate guard:** before applying, jobowl warns if the user already sent an application to the same company for the same or a similar role in the last 90 days, and shows the earlier one.
 
 **Stats.** A small readout at the top of the tracker: sent this week and month, response rate (any reply / sent), interview rate, median days to first reply, and a breakdown by source and by channel. Numbers only from recorded data, no projections.
 
@@ -114,7 +114,7 @@ Everything v0.1 did, kept:
 - Notes per application.
 - Search across company, position and notes; filter by status.
 - Sort by status priority: Interview → Offer → Applied → Draft → Rejected → Withdrawn.
-- Manual entries for applications made outside JobOwl.
+- Manual entries for applications made outside jobowl.
 - One-time import of the v0.1 `applications.json`.
 
 ### F8. Settings
@@ -129,7 +129,7 @@ Everything v0.1 did, kept:
 
 ### First run
 
-1. Welcome screen explains in three sentences what JobOwl does and that data stays local.
+1. Welcome screen explains in three sentences what jobowl does and that data stays local.
 2. Choose AI: detect Ollama if running; otherwise paste an API key. Skippable (the tracker works without AI).
 3. Import resume → review parsed profile → save as profile v1.
 4. Create the first search.

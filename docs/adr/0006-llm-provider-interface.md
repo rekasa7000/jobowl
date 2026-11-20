@@ -7,7 +7,7 @@
 
 The user wants to choose between a local model (Ollama) and cloud models with an API key, and to use different models for different steps. The first proposal was the Vercel AI SDK, which wraps many providers behind one API.
 
-JobOwl needs only two operations (structured output and streamed text) but depends on provider-specific details to do them well: structured-output modes, effort settings, prompt caching, refusal handling, model listing, token usage. Generic wrappers tend to lag behind provider features or flatten them, and add a large dependency for a small surface.
+jobowl needs only two operations (structured output and streamed text) but depends on provider-specific details to do them well: structured-output modes, effort settings, prompt caching, refusal handling, model listing, token usage. Generic wrappers tend to lag behind provider features or flatten them, and add a large dependency for a small surface.
 
 ## Decision
 

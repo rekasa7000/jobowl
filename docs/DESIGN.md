@@ -1,6 +1,6 @@
 # Design
 
-JobOwl wears the **rekasa7000** brand: the same palette, type and print-shop character as [rekasa7000.vercel.app](https://rekasa7000.vercel.app), adapted from a portfolio to a tool you use every day. Where the portfolio performs (orbits, marquees, 3D), JobOwl works: denser, calmer, faster.
+jobowl wears the **rekasa7000** brand: the same palette, type and print-shop character as [rekasa7000.vercel.app](https://rekasa7000.vercel.app), adapted from a portfolio to a tool you use every day. Where the portfolio performs (orbits, marquees, 3D), jobowl works: denser, calmer, faster.
 
 Read [ANTI_SLOP.md](ANTI_SLOP.md) alongside this. It lists what the design must never become.
 
@@ -79,7 +79,7 @@ Rules:
 
 - Components use semantic tokens (`--text-secondary`), never brand constants or hex values.
 - Orange text on cream uses `--accent-text`, never `--accent`.
-- Text on orange fills is always `--on-accent` (teal). The portfolio's white-on-orange button is 3.5:1 and fails AA at button size, so JobOwl doesn't use it.
+- Text on orange fills is always `--on-accent` (teal). The portfolio's white-on-orange button is 3.5:1 and fails AA at button size, so jobowl doesn't use it.
 - Theme setting: Dark (default), Light, or System.
 
 ### Status colours
@@ -152,7 +152,7 @@ Names match the portfolio's classes where the component is the same thing.
 | `btn-danger` | Ghost with `--danger` border and text; confirmation required | Delete, discard |
 | `icon-btn` | 36px circle, 1px border; hover: orange icon, 2px hard shadow | Toolbar actions; always has a tooltip and `aria-label` |
 
-Buttons say what they do: **Shortlist**, **Draft email**, **Approve resume**. Never **OK**, **Submit** (JobOwl doesn't submit) or **Continue** without an object.
+Buttons say what they do: **Shortlist**, **Draft email**, **Approve resume**. Never **OK**, **Submit** (jobowl doesn't submit) or **Continue** without an object.
 
 ### Chips
 
@@ -200,7 +200,7 @@ Desktop window, minimum 1100 × 700, designed at 1440 × 900.
 ```
 ┌──────────┬───────────────────────────────────────────────────────────────┐
 │ [owl]    │  FEED  — 12 new since this morning          [Run now]  ◐  ⚙   │  ← top bar: title, aside, primary action, theme, settings
-│ JOBOWL   ├───────────────────────────────────────────────────────────────┤
+│ jobowl   ├───────────────────────────────────────────────────────────────┤
 │          │                                                               │
 │ 01 Feed  │   list (≈ 45%)                │  detail (≈ 55%)               │
 │ 02 Queue │                               │                               │
@@ -226,7 +226,7 @@ Each screen lists its content and its empty, loading and error states.
 
 Four steps, one per screen, progress shown as `01 / 04` in mono.
 
-1. **Welcome**: "Your job search, on your own PC." Three plain sentences on what JobOwl does and that data stays local. **Get started**.
+1. **Welcome**: "Your job search, on your own PC." Three plain sentences on what jobowl does and that data stays local. **Get started**.
 2. **AI**: Detects Ollama (shows installed models) and offers cloud providers with key fields. **Skip for now** is a real option.
 3. **Resume**: Drop zone → parsing progress with the step named → review (see Profile). 
 4. **First search and sources**: titles, location, remote mode; pick sources. **Start first run**.
@@ -253,7 +253,7 @@ Tickets, one per draft application, newest first. Ticket top: company, role, sco
 The v0.1 tracker, rebuilt: search, status filter chips, list sorted by status priority, detail with status selector, notes, files, and the activity timeline (mono timestamps, one line per event). **Add application** for manual entries.
 
 - **Stats readout** above the list (the brand `readout` panel): `SENT 7D`, `SENT 30D`, `RESPONSE RATE`, `INTERVIEW RATE`, `MEDIAN DAYS TO REPLY`, values in mono with big numbers in `display-md`. Clicking a stat filters the list.
-- **Tabs:** All · Sent with JobOwl · Manual. "Sent with JobOwl" rows show the channel icon (form / email), sent date, and a **No reply yet** chip (amber dashed) when it applies.
+- **Tabs:** All · Sent with jobowl · Manual. "Sent with jobowl" rows show the channel icon (form / email), sent date, and a **No reply yet** chip (amber dashed) when it applies.
 - **What I sent** panel in the detail, for applications with a sent record: a read-only receipt in the `ticket` style, the one other place the ticket appears, because it's the stub of something that went out. It shows destination, date and channel; the resume file (open / show in folder); every field and value (or the email); before/after screenshots; the posting snapshot. A small lock icon and the label `SENT RECORD · READ-ONLY`.
 - Empty (sent tab): "Nothing sent yet." / "Applications you send from the queue are recorded here automatically."
 
@@ -292,9 +292,9 @@ Left sub-navigation: AI providers, Models per layer, Spending, Runs and startup,
 
 ## App icon and wordmark
 
-- **Mark:** the owl from v0.1, redrawn in brand colours: rounded-square teal tile (22% radius, like the portfolio's `brand-logo`), owl eyes and brow in cream line work, the magnifier lens ring in orange. One eye *is* the magnifying glass: JobOwl looks closely.
+- **Mark:** the owl from v0.1, redrawn in brand colours: rounded-square teal tile (22% radius, like the portfolio's `brand-logo`), owl eyes and brow in cream line work, the magnifier lens ring in orange. One eye *is* the magnifying glass: jobowl looks closely.
 - In the app, the mark gets the brand's 2px orange hard shadow on light, a 1px `--border-strong` ring on dark.
-- **Wordmark:** `JOBOWL` in Anton. Under it, in `label` style: `JOB SEARCH, LOCALLY`.
+- **Wordmark:** `jobowl`, always lowercase, set in Anton with no uppercase transform (the one exception to the display style's caps rule). Under it, in `label` style: `JOB SEARCH, LOCALLY`.
 - Icon files: SVG source in `resources/icons/jobowl.svg`, exported to ICO (16–256px) for Windows; the 16px and 24px sizes are hand-simplified (eyes and lens only).
 
 ## Voice

@@ -2,10 +2,10 @@
 
 ## Overview
 
-JobOwl is a single Electron app with no backend. Everything runs in three kinds of process on the user's PC, plus an Edge window that Playwright drives when applying.
+jobowl is a single Electron app with no backend. Everything runs in three kinds of process on the user's PC, plus an Edge window that Playwright drives when applying.
 
 ```
-┌──────────────────────────────── JobOwl.exe ────────────────────────────────┐
+┌──────────────────────────────── jobowl.exe ────────────────────────────────┐
 │                                                                            │
 │  Renderer (React, sandboxed)          Main process (Node, trusted)         │
 │  ┌──────────────────────────┐  IPC   ┌──────────────────────────────────┐  │
@@ -26,7 +26,7 @@ JobOwl is a single Electron app with no backend. Everything runs in three kinds 
                                                               │ Playwright
      Network (only to what the user configured):              ▼
      job-board APIs · career pages · AI provider ·     Microsoft Edge (headed,
-     Ollama on localhost                               persistent JobOwl profile)
+     Ollama on localhost                               persistent jobowl profile)
 ```
 
 ### Why this shape
@@ -112,10 +112,10 @@ Rules for the layout:
 
 ## Data location
 
-All user data lives in one folder, default `%APPDATA%\JobOwl\` (changeable in Settings, for example to a synced drive the user controls):
+All user data lives in one folder, default `%APPDATA%\jobowl\` (changeable in Settings, for example to a synced drive the user controls):
 
 ```
-%APPDATA%\JobOwl\
+%APPDATA%\jobowl\
 ├─ jobowl.db              # SQLite (WAL mode)
 ├─ files\
 │  ├─ imports\            # original uploaded resumes, never modified
@@ -192,7 +192,7 @@ Match ──Shortlist──► Tailor (Tailor layer) ──► Check (Checker la
 
 ## Migration from v0.1
 
-On first launch, if `%APPDATA%\job-tracker\applications.json` exists, Settings offers **Import from JobOwl 0.1**. Each entry becomes an Application with its notes and activity history; ids are reassigned. The old file is left untouched.
+On first launch, if `%APPDATA%\job-tracker\applications.json` exists, Settings offers **Import from jobowl 0.1**. Each entry becomes an Application with its notes and activity history; ids are reassigned. The old file is left untouched.
 
 ## What's deliberately not here
 

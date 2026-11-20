@@ -25,7 +25,7 @@ Review screen: every item editable, low-confidence items highlighted,
 Save → metrics extracted from bullets → profile_versions v(n+1)
 ```
 
-- Scanned PDFs with no text layer: JobOwl says so and asks for a DOCX or pasted text. OCR is out of scope for v1.
+- Scanned PDFs with no text layer: jobowl says so and asks for a DOCX or pasted text. OCR is out of scope for v1.
 - Re-importing a newer resume runs the Parser again and shows a diff against the current profile (added/changed/removed items) so the user merges instead of starting over. Unchanged items keep their IDs.
 - The user can skip import and type the profile in.
 

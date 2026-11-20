@@ -5,7 +5,7 @@
 
 ## Context
 
-JobOwl v0.1 is a ~950-line Rust/GTK4 job tracker targeting Linux. v1 changes scope: a Windows desktop app that fetches jobs, drives a browser to fill application forms, calls several AI providers, and reads and writes PDF and DOCX files.
+jobowl v0.1 is a ~950-line Rust/GTK4 job tracker targeting Linux. v1 changes scope: a Windows desktop app that fetches jobs, drives a browser to fill application forms, calls several AI providers, and reads and writes PDF and DOCX files.
 
 The deciding factor is library maturity for those jobs:
 
