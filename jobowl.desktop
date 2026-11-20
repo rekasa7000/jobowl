@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=Jobowl
-Comment=Desktop job application tracker built with Rust & GTK4 for Gnome. 
-Exec=Jobowl
-Icon=Jobowl
-Terminal=false
-Type=Application
-Categories=Utility;
