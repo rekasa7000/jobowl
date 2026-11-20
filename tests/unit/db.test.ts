@@ -1,4 +1,12 @@
-import { existsSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  cpSync,
+  existsSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -49,12 +57,20 @@ describe('openDb', () => {
   });
 
   it('takes a pre-migration backup when an existing database is behind', async () => {
-    db = await openDb(dataPaths(root), migrations);
-    db.sqlite.exec('delete from __drizzle_migrations');
-    db.sqlite.exec('drop table settings');
+    // Open once with only the first migration, as an older release would have left it.
+    const older = join(root, 'older-migrations');
+    cpSync(migrations, older, { recursive: true });
+    const journalPath = join(older, 'meta', '_journal.json');
+    const journal = JSON.parse(readFileSync(journalPath, 'utf8')) as { entries: unknown[] };
+    journal.entries = journal.entries.slice(0, 1);
+    writeFileSync(journalPath, JSON.stringify(journal));
+
+    db = await openDb(dataPaths(root), older);
+    expect(db.schemaVersion).toBe(1);
     db.close();
 
     db = await openDb(dataPaths(root), migrations);
+    expect(db.schemaVersion).toBeGreaterThan(1);
     expect(readdirSync(join(root, 'backups')).some((f) => f.startsWith('pre-migration'))).toBe(
       true,
     );
