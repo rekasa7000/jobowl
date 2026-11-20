@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import type { ApplicationDetail as Detail } from '@shared/schemas/application';
-import { ConfirmDelete } from '../../components/ConfirmDelete';
+import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { EditableText } from '../../components/EditableText';
 import { StatusPicker } from '../../components/StatusBadge';
 import { Timeline } from '../../components/Timeline';
@@ -116,8 +116,11 @@ function DetailBody({ detail }: { detail: Detail }) {
         </div>
       </div>
 
-      <ConfirmDelete
-        title={`${application.company} · ${application.position}`}
+      <ConfirmDialog
+        title="Delete this application?"
+        description={`${application.company} · ${application.position} and its history will be removed. This can't be undone.`}
+        confirmLabel="Delete application"
+        cancelLabel="Keep it"
         open={confirming}
         busy={remove.isPending}
         error={remove.isError ? errorMessage(remove.error) : null}
