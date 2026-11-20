@@ -7,6 +7,9 @@ import { readSettings, writeSettings } from '../db/settings-repo';
 import { detectLegacy, importLegacy } from '../legacy/import';
 import { SECRET_NAMES, createProviderFactory } from '../ai/registry';
 import { testModel } from '../ai/test-model';
+import { parseResume } from '../ai/layers/parser';
+import { createImporter } from '../resume/importer';
+import { dataPaths } from '../paths';
 import { createSecretStore, type Cipher } from '../secrets/secret-store';
 import { providerIdSchema, type AiStatus, type KeyProvider } from '@shared/schemas/ai';
 import { handle } from './handle';
@@ -18,6 +21,10 @@ export interface AppContext {
   dataDir: string;
   /** Where jobowl 0.1 kept its data. Only main ever reads it. */
   legacyFile: string;
+  /** Shows the native file picker and reads the chosen file, or returns null if cancelled. */
+  pickResumeFile: () => Promise<{ name: string; bytes: Uint8Array } | null>;
+  /** Reads resume text in a separate process. */
+  extractResume: (bytes: Uint8Array) => Promise<string>;
   /** The operating system's encryption for API keys. */
   cipher: Cipher;
   isTrusted: (event: IpcMainInvokeEvent) => boolean;
@@ -29,6 +36,12 @@ export function registerIpc(ctx: AppContext): void {
   const secrets = createSecretStore(ctx.db, ctx.cipher);
   const aiCalls = createAiCallsRepo(ctx.db);
   const providerFor = createProviderFactory(() => readSettings(ctx.db).ai, secrets);
+  const ai = { getSettings: () => readSettings(ctx.db).ai, providerFor, calls: aiCalls };
+  const importer = createImporter({
+    paths: dataPaths(ctx.dataDir),
+    extract: ctx.extractResume,
+    parse: (text) => parseResume(ai, text),
+  });
   const { isTrusted } = ctx;
 
   function aiStatus(): AiStatus {
@@ -85,7 +98,16 @@ export function registerIpc(ctx: AppContext): void {
 
   handle('profile:get', isTrusted, () => profiles.current());
   handle('profile:versions', isTrusted, () => profiles.list());
-  handle('profile:save', isTrusted, ({ profile, note }) => profiles.save(profile, note));
+  handle('profile:save', isTrusted, ({ profile, note, importId }) =>
+    profiles.save(profile, note, importId ? importer.sourceFor(importId) : undefined),
+  );
+  handle('resume:import-file', isTrusted, async () => {
+    const file = await ctx.pickResumeFile();
+    return file ? importer.run(file) : null;
+  });
+  handle('resume:import-text', isTrusted, ({ text }) =>
+    importer.run({ name: 'pasted-resume.txt', bytes: new TextEncoder().encode(text) }),
+  );
 
   handle('legacy:detect', isTrusted, () => detectLegacy(ctx.legacyFile, apps));
   handle('legacy:import', isTrusted, ({ includeSamples }) =>

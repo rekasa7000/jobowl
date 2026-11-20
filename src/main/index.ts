@@ -1,7 +1,9 @@
-import { join } from 'node:path';
-import { app, BrowserWindow, safeStorage, shell, type IpcMainInvokeEvent } from 'electron';
+import { basename, join } from 'node:path';
+import { readFile } from 'node:fs/promises';
+import { app, BrowserWindow, dialog, safeStorage, shell, type IpcMainInvokeEvent } from 'electron';
 import { openDb } from './db/open';
 import { registerIpc } from './ipc/register';
+import { extractInWorker } from './resume/extract-client';
 import { dataPaths } from './paths';
 
 app.setName('jobowl');
@@ -86,6 +88,18 @@ async function main(): Promise<void> {
     dataDir: dataRoot,
     // jobowl 0.1 wrote to the config folder, which is %APPDATA% on Windows.
     legacyFile: join(app.getPath('appData'), 'job-tracker', 'applications.json'),
+    extractResume: extractInWorker,
+    pickResumeFile: async () => {
+      if (!mainWindow) return null;
+      const choice = await dialog.showOpenDialog(mainWindow, {
+        title: 'Choose your resume',
+        properties: ['openFile'],
+        filters: [{ name: 'Resumes (PDF, DOCX, text)', extensions: ['pdf', 'docx', 'txt'] }],
+      });
+      const path = choice.filePaths[0];
+      if (choice.canceled || !path) return null;
+      return { name: basename(path), bytes: new Uint8Array(await readFile(path)) };
+    },
     // Windows encrypts keys for this user account (DPAPI). Without it, keys aren't stored at all.
     cipher: {
       isAvailable: () => safeStorage.isEncryptionAvailable(),

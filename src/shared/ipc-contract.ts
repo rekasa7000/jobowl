@@ -19,7 +19,13 @@ import {
   listFilterSchema,
   updateApplicationSchema,
 } from './schemas/application';
-import { profileVersionSchema, saveProfileSchema, savedProfileSchema } from './schemas/profile';
+import {
+  importDraftSchema,
+  importTextSchema,
+  profileVersionSchema,
+  saveProfileSchema,
+  savedProfileSchema,
+} from './schemas/profile';
 import { settingsPatchSchema, settingsSchema } from './schemas/settings';
 
 export const appInfoSchema = z.object({
@@ -47,6 +53,8 @@ export const ipcContract = {
   'ai:models': { input: listModelsSchema, output: z.array(modelInfoSchema) },
   'ai:test': { input: testModelSchema, output: testResultSchema },
   'ai:spend': { input: z.undefined(), output: spendSchema },
+  'resume:import-file': { input: z.undefined(), output: importDraftSchema.nullable() },
+  'resume:import-text': { input: importTextSchema, output: importDraftSchema },
   'profile:get': { input: z.undefined(), output: savedProfileSchema.nullable() },
   'profile:versions': { input: z.undefined(), output: z.array(profileVersionSchema) },
   'profile:save': { input: saveProfileSchema, output: savedProfileSchema },
