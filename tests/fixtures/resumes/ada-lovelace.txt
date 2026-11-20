@@ -1,0 +1,32 @@
+Ada Lovelace
+Analytical Engineer
+ada@example.com | +44 20 7946 0000 | London, UK
+github.com/ada-example
+
+SUMMARY
+Engineer who writes programs for mechanical computers and explains them clearly.
+
+EXPERIENCE
+Senior Engineer, Analytical Engines Ltd, London
+Jan 2020 - Present
+- Cut run time of the Bernoulli number program by 40% across 12 machines
+- Wrote the first published algorithm for the Analytical Engine
+- Mentored 4 junior engineers through their first production release
+
+Engineer, Difference Works, London
+Mar 2017 - Dec 2019
+- Built a tabulation tool used by 30 clerks daily
+- Reduced punch-card errors from 8% to 1%
+
+PROJECTS
+Notes on the Analytical Engine
+Translated and annotated a paper on the engine, tripling its length with original notes.
+
+EDUCATION
+University of London, BSc Mathematics, 2013 - 2017
+
+SKILLS
+Mathematics, Algorithms, Punch card programming, Technical writing
+
+CERTIFICATIONS
+Royal Society Fellow Candidate, 2019
