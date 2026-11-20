@@ -6,6 +6,8 @@ import {
   providerIdSchema,
   type AiSettings as AiSettingsValue,
   type KeyProvider,
+  type Layer,
+  type LayerChoice,
   type ProviderId,
 } from '@shared/schemas/ai';
 import {
@@ -110,28 +112,149 @@ function UrlField({
   );
 }
 
+/**
+ * Which model a layer uses. The choice is held here while it's half-made (a provider with no model
+ * yet) and saved once it's complete, when the model field loses focus or the test runs.
+ */
+function LayerPicker({
+  layer,
+  saved,
+  ready,
+  onSave,
+}: {
+  layer: Layer;
+  saved: LayerChoice | undefined;
+  ready: ProviderId[];
+  onSave: (choice: LayerChoice) => void;
+}) {
+  const loadModels = useLoadModels();
+  const test = useTestModel();
+  const [provider, setProvider] = useState<ProviderId | ''>(saved?.provider ?? '');
+  const [model, setModel] = useState(saved?.model ?? '');
+  const complete = provider !== '' && model.trim() !== '';
+
+  const commit = (): LayerChoice | null => {
+    if (provider === '' || model.trim() === '') return null;
+    const choice = { provider, model: model.trim() };
+    if (choice.provider !== saved?.provider || choice.model !== saved.model) onSave(choice);
+    return choice;
+  };
+
+  return (
+    <fieldset className="panel flex flex-col gap-3 p-5">
+      <legend className="meta-label px-2">
+        {LAYER_LABELS[layer].name}: {LAYER_LABELS[layer].job.toLowerCase()}
+      </legend>
+      <div className="grid grid-cols-[16rem_1fr] gap-3">
+        <div>
+          <label htmlFor={`${layer}-provider`} className="meta-label field-label">
+            Provider
+          </label>
+          <select
+            id={`${layer}-provider`}
+            className="input"
+            value={provider}
+            onChange={(event) => {
+              test.reset();
+              loadModels.reset();
+              setProvider(providerIdSchema.parse(event.target.value));
+              setModel('');
+            }}
+          >
+            <option value="" disabled>
+              Choose…
+            </option>
+            {providerIdSchema.options.map((id) => (
+              <option key={id} value={id} disabled={!ready.includes(id)}>
+                {PROVIDER_LABELS[id]}
+                {ready.includes(id) ? '' : ' (not set up)'}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label htmlFor={`${layer}-model`} className="meta-label field-label">
+            Model
+          </label>
+          <input
+            id={`${layer}-model`}
+            className="input"
+            list={`${layer}-models`}
+            disabled={provider === ''}
+            placeholder={provider === 'anthropic' ? 'claude-opus-5-5' : 'Model name'}
+            value={model}
+            onChange={(event) => {
+              test.reset();
+              setModel(event.target.value);
+            }}
+            onBlur={commit}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') commit();
+            }}
+          />
+          <datalist id={`${layer}-models`}>
+            {loadModels.data?.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.label}
+              </option>
+            ))}
+          </datalist>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          className="btn-ghost"
+          disabled={provider === '' || loadModels.isPending}
+          onClick={() => provider !== '' && loadModels.mutate(provider)}
+        >
+          {loadModels.isPending ? 'Loading…' : 'Load model list'}
+        </button>
+        <button
+          type="button"
+          className="btn-ghost"
+          disabled={!complete || test.isPending}
+          onClick={() => {
+            const choice = commit();
+            if (choice) test.mutate(choice);
+          }}
+        >
+          {test.isPending ? 'Testing…' : 'Test this model'}
+        </button>
+        <span role="status" className="font-mono text-[0.8125rem]">
+          {test.data?.ok && (
+            <span className="text-signal">Works · {(test.data.ms / 1000).toFixed(1)} s</span>
+          )}
+          {test.data && !test.data.ok && (
+            <span className="text-danger">Failed: {test.data.error}</span>
+          )}
+          {loadModels.data && !test.data && `${String(loadModels.data.length)} models found`}
+        </span>
+      </div>
+      {loadModels.isError && (
+        <p role="alert" className="field-error">
+          Couldn't load models: {errorMessage(loadModels.error)}
+        </p>
+      )}
+    </fieldset>
+  );
+}
+
 export function AiSettings() {
   const settings = useSettings();
   const update = useUpdateSettings();
   const status = useAiStatus();
   const spend = useSpend();
-  const loadModels = useLoadModels();
-  const test = useTestModel();
 
   if (!settings.data || !status.data) return <p className="text-ink-3">Loading AI settings…</p>;
   const ai = settings.data.ai;
   const save = (next: AiSettingsValue) => update.mutate({ ai: next });
-  const parser = ai.layers.parser;
   const ready = status.data.providers
     .filter((provider) => provider.ready)
     .map((provider) => provider.id);
   const hint = (id: ProviderId) =>
     status.data.providers.find((provider) => provider.id === id)?.keyHint ?? null;
-
-  function choose(next: { provider: ProviderId; model: string }) {
-    test.reset();
-    save({ ...ai, layers: { ...ai.layers, parser: next } });
-  }
 
   return (
     <section aria-labelledby="ai-title" className="flex flex-col gap-5">
@@ -176,92 +299,13 @@ export function AiSettings() {
       />
 
       {ACTIVE_LAYERS.map((layer) => (
-        <fieldset key={layer} className="panel flex flex-col gap-3 p-5">
-          <legend className="meta-label px-2">
-            {LAYER_LABELS[layer].name}: {LAYER_LABELS[layer].job.toLowerCase()}
-          </legend>
-          <div className="grid grid-cols-[12rem_1fr] gap-3">
-            <div>
-              <label htmlFor="parser-provider" className="meta-label field-label">
-                Provider
-              </label>
-              <select
-                id="parser-provider"
-                className="input"
-                value={parser?.provider ?? ''}
-                onChange={(event) =>
-                  choose({ provider: providerIdSchema.parse(event.target.value), model: '' })
-                }
-              >
-                <option value="" disabled>
-                  Choose…
-                </option>
-                {providerIdSchema.options.map((id) => (
-                  <option key={id} value={id} disabled={!ready.includes(id)}>
-                    {PROVIDER_LABELS[id]}
-                    {ready.includes(id) ? '' : ' (not set up)'}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="parser-model" className="meta-label field-label">
-                Model
-              </label>
-              <input
-                id="parser-model"
-                className="input"
-                list="parser-models"
-                disabled={!parser}
-                placeholder={parser?.provider === 'anthropic' ? 'claude-opus-5-5' : 'Model name'}
-                value={parser?.model ?? ''}
-                onChange={(event) =>
-                  parser && choose({ provider: parser.provider, model: event.target.value })
-                }
-              />
-              <datalist id="parser-models">
-                {loadModels.data?.map((model) => (
-                  <option key={model.id} value={model.id}>
-                    {model.label}
-                  </option>
-                ))}
-              </datalist>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              className="btn-ghost"
-              disabled={!parser || loadModels.isPending}
-              onClick={() => parser && loadModels.mutate(parser.provider)}
-            >
-              {loadModels.isPending ? 'Loading…' : 'Load model list'}
-            </button>
-            <button
-              type="button"
-              className="btn-ghost"
-              disabled={!parser || parser.model === '' || test.isPending}
-              onClick={() => parser && test.mutate(parser)}
-            >
-              {test.isPending ? 'Testing…' : 'Test this model'}
-            </button>
-            <span role="status" className="font-mono text-[0.8125rem]">
-              {test.data?.ok && (
-                <span className="text-signal">Works · {(test.data.ms / 1000).toFixed(1)} s</span>
-              )}
-              {test.data && !test.data.ok && (
-                <span className="text-danger">Failed: {test.data.error}</span>
-              )}
-              {loadModels.data && !test.data && `${loadModels.data.length} models found`}
-            </span>
-          </div>
-          {loadModels.isError && (
-            <p role="alert" className="field-error">
-              Couldn't load models: {errorMessage(loadModels.error)}
-            </p>
-          )}
-        </fieldset>
+        <LayerPicker
+          key={layer}
+          layer={layer}
+          saved={ai.layers[layer]}
+          ready={ready}
+          onSave={(choice) => save({ ...ai, layers: { ...ai.layers, [layer]: choice } })}
+        />
       ))}
 
       <p className="font-mono text-[0.8125rem] text-ink-2" role="status">
