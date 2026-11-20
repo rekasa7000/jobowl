@@ -324,3 +324,15 @@ textarea.input {
     transform: translate(-50%, calc(-50% - 12px));
   }
 }
+
+.btn-quiet {
+  padding: 0.4rem 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.btn-quiet:hover {
+  color: var(--accent-text);
+}

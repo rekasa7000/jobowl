@@ -2,6 +2,7 @@ import { Readout } from '../../components/Readout';
 import { ScreenHeader } from '../../components/ScreenHeader';
 import { ThemeSwitch } from '../../components/ThemeSwitch';
 import { useAppInfo, useSettings, useUpdateSettings } from '../../lib/ipc';
+import { AiSettings } from './AiSettings';
 import { LegacyImport } from './LegacyImport';
 
 export function SettingsScreen() {
@@ -25,6 +26,8 @@ export function SettingsScreen() {
               />
             )}
           </section>
+
+          <AiSettings />
 
           <LegacyImport />
 
