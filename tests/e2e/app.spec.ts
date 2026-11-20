@@ -28,6 +28,12 @@ test.afterEach(async () => {
 });
 
 /** `configDir` stands in for %APPDATA% (Windows) or ~/.config (Linux), where jobowl 0.1 kept its file. */
+const openApplications = (page: Page) =>
+  page
+    .getByRole('navigation', { name: 'Main' })
+    .getByRole('link', { name: 'Applications' })
+    .click();
+
 function launch(): Promise<ElectronApplication> {
   return electron.launch({
     args: ['.', '--no-sandbox'],
@@ -53,6 +59,7 @@ async function addApplication(page: Page, company: string, position: string, not
 test('opens on an honest empty tracker and creates the database', async () => {
   app = await launch();
   const page = await app.firstWindow();
+  await openApplications(page);
 
   await expect(page).toHaveTitle('jobowl');
   await expect(page.getByRole('heading', { name: 'Applications', level: 1 })).toBeVisible();
@@ -64,6 +71,7 @@ test('opens on an honest empty tracker and creates the database', async () => {
 test('adds an application, moves it through statuses and keeps a history', async () => {
   app = await launch();
   const page = await app.firstWindow();
+  await openApplications(page);
 
   await addApplication(page, 'Acme Robotics', 'Embedded Engineer', 'Referred by Dana');
   await expect(page.getByLabel('Notes')).toHaveValue('Referred by Dana');
@@ -77,6 +85,7 @@ test('adds an application, moves it through statuses and keeps a history', async
 test('sorts by status priority and filters by status and search', async () => {
   app = await launch();
   const page = await app.firstWindow();
+  await openApplications(page);
 
   await addApplication(page, 'Alpha', 'Dev');
   await addApplication(page, 'Beta', 'Designer');
@@ -111,6 +120,7 @@ test('sorts by status priority and filters by status and search', async () => {
 test('edits save on blur and survive a restart', async () => {
   app = await launch();
   let page = await app.firstWindow();
+  await openApplications(page);
   await addApplication(page, 'Acme', 'Engineer');
 
   await page.getByLabel('Notes').fill('Phone screen on Friday');
@@ -120,6 +130,7 @@ test('edits save on blur and survive a restart', async () => {
 
   app = await launch();
   page = await app.firstWindow();
+  await openApplications(page);
   await page.getByRole('link', { name: /Acme/ }).click();
   await expect(page.getByLabel('Notes')).toHaveValue('Phone screen on Friday');
 });
@@ -127,6 +138,7 @@ test('edits save on blur and survive a restart', async () => {
 test('refuses an empty company and keeps what was typed', async () => {
   app = await launch();
   const page = await app.firstWindow();
+  await openApplications(page);
   await addApplication(page, 'Acme', 'Engineer');
 
   await page.getByLabel('Company').fill('   ');
@@ -138,6 +150,7 @@ test('refuses an empty company and keeps what was typed', async () => {
 test('asks before deleting and removes the application and its history', async () => {
   app = await launch();
   const page = await app.firstWindow();
+  await openApplications(page);
   await addApplication(page, 'Acme', 'Engineer');
 
   await page.getByRole('button', { name: 'Delete application' }).click();
@@ -152,6 +165,7 @@ test('asks before deleting and removes the application and its history', async (
 test('works from the keyboard: n adds, / searches, arrows move through the list', async () => {
   app = await launch();
   const page = await app.firstWindow();
+  await openApplications(page);
   await addApplication(page, 'Alpha', 'Dev');
   await addApplication(page, 'Beta', 'Dev');
 
@@ -178,6 +192,7 @@ test('imports jobowl 0.1 data once, skipping its sample entries', async () => {
 
   app = await launch();
   const page = await app.firstWindow();
+  await openApplications(page);
   await page
     .getByRole('navigation', { name: 'Main' })
     .getByRole('link', { name: 'Settings' })
@@ -204,6 +219,7 @@ test('imports jobowl 0.1 data once, skipping its sample entries', async () => {
 test('theme defaults to dark and the choice survives a restart', async () => {
   app = await launch();
   let page = await app.firstWindow();
+  await openApplications(page);
   await expect(page.locator('html')).toHaveClass(/dark/);
 
   await page
@@ -216,12 +232,14 @@ test('theme defaults to dark and the choice survives a restart', async () => {
 
   app = await launch();
   page = await app.firstWindow();
+  await openApplications(page);
   await expect(page.locator('html')).not.toHaveClass(/dark/);
 });
 
 test('the renderer has no Node access and can only reach the typed api', async () => {
   app = await launch();
   const page = await app.firstWindow();
+  await openApplications(page);
   const probe = await page.evaluate(() => ({
     require: typeof (window as unknown as { require?: unknown }).require,
     process: typeof (window as unknown as { process?: unknown }).process,

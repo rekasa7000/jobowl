@@ -90,8 +90,8 @@ async function configureParser(page: Page) {
   await page.getByLabel('Ollama address').click(); // leaving the field saves it
   // The provider only becomes selectable once the address is saved and the list refreshes.
   await expect(page.locator('#parser-provider option[value="openai_compatible"]')).toBeEnabled();
-  await page.getByLabel('Provider').selectOption('openai_compatible');
-  await page.getByLabel('Model', { exact: true }).fill('fake-model');
+  await page.locator('#parser-provider').selectOption('openai_compatible');
+  await page.locator('#parser-model').fill('fake-model');
   await page.getByLabel('Ollama address').click(); // leaving the model field saves the choice
 }
 
@@ -106,9 +106,9 @@ test('tests a model, then imports a PDF through the reader process and saves ver
   const page = await app.firstWindow();
   await configureParser(page);
 
-  await page.getByRole('button', { name: 'Load model list' }).click();
+  await page.getByRole('button', { name: 'Load model list' }).first().click();
   await expect(page.getByText('1 models found')).toBeVisible();
-  await page.getByRole('button', { name: 'Test this model' }).click();
+  await page.getByRole('button', { name: 'Test this model' }).first().click();
   await expect(page.getByText(/Works · /)).toBeVisible();
 
   await nav(page, 'Profile');

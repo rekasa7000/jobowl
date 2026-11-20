@@ -4,6 +4,7 @@ import { ThemeSwitch } from '../../components/ThemeSwitch';
 import { useAppInfo, useSettings, useUpdateSettings } from '../../lib/ipc';
 import { AiSettings } from './AiSettings';
 import { LegacyImport } from './LegacyImport';
+import { RunSettings } from './RunSettings';
 
 export function SettingsScreen() {
   const settings = useSettings();
@@ -26,6 +27,8 @@ export function SettingsScreen() {
               />
             )}
           </section>
+
+          <RunSettings />
 
           <AiSettings />
 

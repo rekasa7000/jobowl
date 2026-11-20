@@ -2,8 +2,11 @@ import { NavLink } from 'react-router';
 import logo from '../jobowl.svg';
 
 const ITEMS = [
+  { to: '/feed', label: 'Feed' },
   { to: '/applications', label: 'Applications' },
   { to: '/profile', label: 'Profile' },
+  { to: '/searches', label: 'Searches' },
+  { to: '/sources', label: 'Sources' },
   { to: '/settings', label: 'Settings' },
 ] as const;
 
