@@ -81,7 +81,9 @@ Rules:
 | id | TEXT PK | |
 | version | INTEGER UNIQUE | 1, 2, 3… |
 | data | TEXT (JSON `Profile`) | |
-| source_file_id | TEXT FK files NULL | the resume it was imported from, if any |
+| source_name | TEXT NULL | file name of the resume this version was imported from, for display |
+| source_path | TEXT NULL | the kept, untouched copy, relative to the data folder (`files/imports/…`) |
+| source_sha256 | TEXT NULL | checksum of that file |
 | note | TEXT NULL | "Added Kloudtrack project" |
 | created_at | TEXT | |
 
@@ -266,15 +268,14 @@ Every LLM request, for cost tracking and debugging.
 |---|---|---|
 | id | TEXT PK | |
 | run_id | TEXT FK NULL | |
-| layer | TEXT | `parser` \| `scorer` \| `tailor` \| `checker` \| `writer` \| `form_mapper` \| `extractor` |
+| layer | TEXT | `parser` \| `scorer` \| `tailor` \| `checker` \| `writer` \| `form_mapper` \| `extractor`, or `test` for the Settings test button |
 | provider | TEXT | `ollama` \| `anthropic` \| `openai` \| `openai_compatible` |
 | model | TEXT | |
 | prompt_version | TEXT | e.g. `scorer@3` |
 | input_tokens, output_tokens, cached_input_tokens | INTEGER | |
-| cost_usd | REAL | estimate from the price table; 0 for local |
+| cost_usd | REAL NULL | estimate from the price table; 0 for local models; NULL when the model has no known price (counted separately, never shown as free) |
 | duration_ms | INTEGER | |
-| outcome | TEXT | `ok` \| `invalid_output` \| `refused` \| `error` |
-| debug_payload | TEXT NULL | full request/response, only when debug logging is on; pruned after 7 days |
+| outcome | TEXT | `ok` \| `invalid_output` \| `refused` \| `truncated` \| `error` |
 | created_at | TEXT | |
 
 ### `settings` and `secrets`
@@ -287,7 +288,8 @@ Every LLM request, for cost tracking and debugging.
 | `secrets` | |
 |---|---|
 | name | TEXT PK (`anthropic_api_key`, `openai_api_key`, `adzuna_app_key`, …) |
-| ciphertext | BLOB (`safeStorage.encryptString`) |
+| ciphertext | BLOB (`safeStorage.encryptStringAsync`) |
+| hint | TEXT (last four characters, to tell keys apart; never the whole key) |
 | updated_at | TEXT |
 
 ## Retention
@@ -295,4 +297,4 @@ Every LLM request, for cost tracking and debugging.
 - Dismissed jobs and their matches are archived after 30 days, deleted after 180.
 - Closed jobs with no application are deleted after 90 days.
 - Anything linked to an application is kept until the user deletes the application.
-- `ai_calls.debug_payload` is pruned after 7 days; the row stays for cost history.
+- `ai_calls` rows are kept for cost history. Request and response bodies are not stored.

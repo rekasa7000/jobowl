@@ -46,11 +46,14 @@ interface LlmProvider {
     signal?: AbortSignal;
   }): Promise<{ value: T; usage: Usage; raw: unknown }>;
   /** Free text, streamed to the UI (Writer previews). */
-  streamText(req: {...}): AsyncIterable<TextChunk>;
 }
 ```
 
-Layers call `generateObject` or `streamText`; they never import an SDK. Adding a provider means writing one adapter and its tests.
+Layers call `generateObject`; they never import an SDK. Adding a provider means writing one adapter and its tests. `streamText` joins the interface with the Writer layer, the first thing that streams.
+
+Problems come back as typed errors that carry the tokens already used (`RefusedError`, `TruncatedError`, `InvalidOutputError`), so a failed call is still logged with its real cost. Layers run through `runLayer`, which picks the model chosen for that layer in Settings, says what to do when none is set, and logs every call.
+
+**Output schemas must suit strict-schema providers.** Every field is required, nothing uses `anyOf` or length limits, and `""` means "not stated". The parser's schema follows this; later layers should too.
 
 ### Anthropic adapter
 
@@ -89,6 +92,7 @@ Uses the `ollama` JS client against `http://127.0.0.1:11434` (configurable).
 
 ### Parser
 
+*Built in M2.* 
 Input: plain text from the resume (layout lost). Output: a `Profile` draft where every item has `confidence: 'high' | 'low'`. The UI shows low-confidence items highlighted. Nothing becomes the profile until the user saves it.
 
 Dates the Parser can't determine are left empty, not guessed.

@@ -6,7 +6,7 @@ jobowl finds job openings that match what you're looking for, tailors your resum
 
 No accounts. No server. No telemetry. Your resume, your data, and your API keys stay on your machine.
 
-> **Status: tracker built (M0 and M1).** The app tracks your applications locally, with history, search and filters, and imports your jobowl 0.1 data. It has the jobowl look, a local database and a Windows installer pipeline. The features below arrive milestone by milestone; see [the roadmap](docs/ROADMAP.md) and start with [`docs/README.md`](docs/README.md). The original Rust/GTK4 tracker (v0.1) is gone from the tree but stays in git history.
+> **Status: profile built (M0 to M2).** jobowl tracks your applications locally, imports your jobowl 0.1 data, and reads your resume into a profile you check and correct, using an AI model on your PC or with your own key. Job discovery, tailoring and applying come next; see [the roadmap](docs/ROADMAP.md) and start with [`docs/README.md`](docs/README.md). The original Rust/GTK4 tracker (v0.1) is gone from the tree but stays in git history.
 
 ## What it does
 

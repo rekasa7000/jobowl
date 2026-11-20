@@ -117,6 +117,8 @@ Things that are easy to get wrong, learned while building M0:
 
 - **Preload is CommonJS and self-contained.** Sandboxed preload scripts can't be ES modules and can't `require` packages, so electron-vite emits `preload/index.cjs` and bundles zod into it.
 - **One SQLite binary for Node and Electron.** better-sqlite3 13 uses N-API, so the prebuilt binary works in both. electron-builder runs with `npmRebuild: false`; there is nothing to recompile.
+- **The resume reader is its own build entry.** `workers/extract` is bundled separately and started with `utilityProcess.fork`, one throwaway process per file with a 30 second limit. Only extracted text comes back to main.
+- **Key storage is async.** Electron 45 deprecates the synchronous `safeStorage` calls, so the secret store and provider factory are async.
 - **Migrations ship as a resource.** The `drizzle/` folder is copied next to the app (`resources/drizzle`) and found through `process.resourcesPath` when packaged.
 - **Fuses apply to packaged builds only.** `runAsNode`, Node CLI inspect flags and the Node options variable are off in the installer, so end-to-end tests drive the built output (`out/`), not the installed app.
 

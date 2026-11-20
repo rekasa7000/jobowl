@@ -32,6 +32,8 @@ Everything v0.1 did, in the new app.
 
 ## M2. Profile
 
+**Status: built, with two parts deferred.** Resume import (PDF, DOCX, text, read in a utility process), the parser layer with a check that every item appears in the resume, the profile editor with versions, AI provider settings with encrypted keys, a model test button and spend display, and call logging are done and covered by unit and end-to-end tests. Not in M2: the monthly spending cap (shown from M3, when runs start to spend), and Anthropic, OpenAI and Ollama have only been exercised against fake clients and a fake OpenAI-compatible server, never a live account.
+
 - Resume import (PDF, DOCX, text) in a utility process.
 - AI provider settings: Ollama, Anthropic, OpenAI, OpenAI-compatible; keys in `safeStorage`; model per layer; test button.
 - Parser layer → review screen → profile versions.

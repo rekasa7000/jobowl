@@ -59,8 +59,8 @@ Following Electron's security checklist:
 
 ## Secrets
 
-- Stored in the `secrets` table, encrypted with `safeStorage.encryptString`. On Windows this uses DPAPI, tied to the logged-in user.
-- If `safeStorage.isEncryptionAvailable()` is false, jobowl refuses to store keys and says why, instead of falling back to plain text.
+- Stored in the `secrets` table, encrypted with `safeStorage.encryptStringAsync`. On Windows this uses DPAPI, tied to the logged-in user. When the system reports that its key has rotated, the value is saved again under the new one.
+- If `safeStorage.isAsyncEncryptionAvailable()` is false, jobowl refuses to store keys and says why, instead of falling back to plain text.
 - Keys are decrypted only in main, only when building a provider client, and never sent to the renderer. The UI shows `sk-ant-…4f2a` style masks.
 - Exports and backups never include the `secrets` table.
 

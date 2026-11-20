@@ -27,7 +27,7 @@ No test hits the live network. The shared HTTP client has a test mode that fails
 
 ## The fake provider
 
-`FakeProvider` implements `LlmProvider` and returns scripted responses keyed by layer and input hash. Tests can script: valid output, invalid JSON, schema-valid-but-wrong output (unknown IDs, invented numbers), refusals, timeouts. This tests everything around the model without paying for one.
+There is no shared `FakeProvider` class yet. Unit tests build small fake providers and fake SDK clients inline, and end-to-end tests run a real fake OpenAI-compatible HTTP server so the real adapter, settings screen and resume reader are all exercised. A shared `FakeProvider` returns scripted responses keyed by layer and input hash once several layers need one. Tests can script: valid output, invalid JSON, schema-valid-but-wrong output (unknown IDs, invented numbers), refusals, timeouts. This tests everything around the model without paying for one.
 
 ## Tailoring eval
 
