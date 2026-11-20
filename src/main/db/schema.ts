@@ -38,3 +38,17 @@ export const applicationEvents = sqliteTable(
   },
   (table) => [index('application_events_app_idx').on(table.applicationId, table.at)],
 );
+
+/** Immutable, numbered snapshots of the profile. The highest version is the current one. */
+export const profileVersions = sqliteTable('profile_versions', {
+  id: text('id').primaryKey(),
+  version: integer('version').notNull().unique(),
+  data: text('data').notNull(),
+  note: text('note'),
+  /** File name of the resume this version was imported from, for display. */
+  sourceName: text('source_name'),
+  /** Path of the kept copy of that resume, relative to the data folder. */
+  sourcePath: text('source_path'),
+  sourceSha256: text('source_sha256'),
+  createdAt: text('created_at').notNull(),
+});
