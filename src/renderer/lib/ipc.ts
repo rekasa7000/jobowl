@@ -24,6 +24,10 @@ export function useUpdateSettings() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: (patch: SettingsPatch) => call('settings:update', patch),
-    onSuccess: (settings: Settings) => client.setQueryData(['settings'], settings),
+    onSuccess: (settings: Settings) => {
+      client.setQueryData(['settings'], settings);
+      // Which providers are ready depends on settings such as the server address.
+      return client.invalidateQueries({ queryKey: ['ai', 'status'] });
+    },
   });
 }
