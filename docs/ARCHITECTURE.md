@@ -46,7 +46,7 @@ jobowl is a single Electron app with no backend. Everything runs in three kinds 
 | Build | electron-vite on Vite 8 (main, preload and renderer bundles) |
 | Packaging | electron-builder → NSIS installer, per-user install, no admin rights |
 | Updates | electron-updater against GitHub Releases (opt-in, see [ROADMAP](ROADMAP.md)) |
-| UI | React, TanStack Query over IPC; React Router (memory router) joins with the second screen in M1 |
+| UI | React, TanStack Query over IPC; React Router (memory router) |
 | Styling | Tailwind CSS v4 with the brand tokens from [DESIGN.md](DESIGN.md); Radix primitives for accessible dialogs, menus, popovers |
 | Icons | Lucide |
 | Database | SQLite via better-sqlite3, Drizzle ORM and drizzle-kit migrations |
@@ -82,6 +82,7 @@ jobowl/
 │  │  ├─ core/                # run orchestrator, scheduler, event bus to renderer
 │  │  ├─ db/                  # Drizzle schema, migrations, repositories
 │  │  ├─ secrets/             # safeStorage wrapper
+│  │  ├─ legacy/              # one-time import of jobowl 0.1 data
 │  │  ├─ sources/             # connector interface + one folder per connector
 │  │  ├─ ai/                  # LlmProvider, adapters, layers, prompts, cost tracking
 │  │  ├─ resume/              # import, profile builder, tailor pipeline, renderers

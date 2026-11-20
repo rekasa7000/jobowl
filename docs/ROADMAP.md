@@ -20,6 +20,8 @@ Replace the Rust/GTK4 code with the TypeScript scaffold.
 
 ## M1. Tracker parity
 
+**Status: built.** Applications list and detail, manual add and delete, history, search and status filter, the v0.1 import, and keyboard operation are done and covered by unit and end-to-end tests. Statuses follow the product doc, so `Draft` exists from the start.
+
 Everything v0.1 did, in the new app.
 
 - Applications list and detail: statuses, notes, activity history, search, status filter, priority sort.

@@ -1,4 +1,10 @@
+import { NavLink } from 'react-router';
 import logo from '../jobowl.svg';
+
+const ITEMS = [
+  { to: '/applications', label: 'Applications' },
+  { to: '/settings', label: 'Settings' },
+] as const;
 
 export function Rail() {
   return (
@@ -14,10 +20,12 @@ export function Rail() {
       </div>
 
       <nav aria-label="Main" className="mt-8 flex flex-col gap-1">
-        <a href="#home" className="nav-item" aria-current="page">
-          <span className="meta-label">01</span>
-          <span className="font-semibold">Home</span>
-        </a>
+        {ITEMS.map((item, index) => (
+          <NavLink key={item.to} to={item.to} className="nav-item">
+            <span className="meta-label">{String(index + 1).padStart(2, '0')}</span>
+            <span className="font-semibold">{item.label}</span>
+          </NavLink>
+        ))}
       </nav>
     </aside>
   );

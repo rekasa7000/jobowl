@@ -84,6 +84,8 @@ async function main(): Promise<void> {
     version: app.getVersion(),
     platform: process.platform,
     dataDir: dataRoot,
+    // jobowl 0.1 wrote to the config folder, which is %APPDATA% on Windows.
+    legacyFile: join(app.getPath('appData'), 'job-tracker', 'applications.json'),
     isTrusted,
   });
 

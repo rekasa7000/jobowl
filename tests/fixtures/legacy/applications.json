@@ -1,0 +1,71 @@
+[
+  {
+    "id": 1,
+    "company": "Google",
+    "position": "Software Engineer",
+    "status": "Applied",
+    "date_applied": "2024-01-15",
+    "notes": "",
+    "activity_history": [
+      {
+        "date": "2024-01-15",
+        "action": "Applied",
+        "details": "Applied to Google for Software Engineer"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "company": "Microsoft",
+    "position": "Senior Developer",
+    "status": "Applied",
+    "date_applied": "2024-01-20",
+    "notes": "",
+    "activity_history": [
+      {
+        "date": "2024-01-20",
+        "action": "Applied",
+        "details": "Applied to Microsoft for Senior Developer"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "company": "Apple",
+    "position": "iOS Developer",
+    "status": "Applied",
+    "date_applied": "2024-01-25",
+    "notes": "",
+    "activity_history": [
+      { "date": "2024-01-25", "action": "Applied", "details": "Applied to Apple for iOS Developer" }
+    ]
+  },
+  {
+    "id": 4,
+    "company": "Acme Robotics",
+    "position": "Embedded Engineer",
+    "status": "Interview",
+    "date_applied": "2024-03-02",
+    "notes": "Referred by Dana. Phone screen went well.",
+    "activity_history": [
+      {
+        "date": "2024-03-02",
+        "action": "Applied",
+        "details": "Applied to Acme Robotics for Embedded Engineer"
+      },
+      {
+        "date": "2024-03-09",
+        "action": "Status changed to Interview",
+        "details": "Changed from Applied to Interview"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "company": "Globex",
+    "position": "Platform Engineer",
+    "status": "Pending",
+    "date_applied": "not a date",
+    "notes": ""
+  }
+]

@@ -1,4 +1,14 @@
 import { z } from 'zod';
+import {
+  applicationDetailSchema,
+  applicationSchema,
+  createApplicationSchema,
+  idSchema,
+  legacyDetectSchema,
+  legacyImportResultSchema,
+  listFilterSchema,
+  updateApplicationSchema,
+} from './schemas/application';
 import { settingsPatchSchema, settingsSchema } from './schemas/settings';
 
 export const appInfoSchema = z.object({
@@ -15,6 +25,16 @@ export const ipcContract = {
   'app:info': { input: z.undefined(), output: appInfoSchema },
   'settings:get': { input: z.undefined(), output: settingsSchema },
   'settings:update': { input: settingsPatchSchema, output: settingsSchema },
+  'applications:list': { input: listFilterSchema, output: z.array(applicationSchema) },
+  'applications:get': { input: idSchema, output: applicationDetailSchema },
+  'applications:create': { input: createApplicationSchema, output: applicationDetailSchema },
+  'applications:update': { input: updateApplicationSchema, output: applicationDetailSchema },
+  'applications:delete': { input: idSchema, output: z.undefined() },
+  'legacy:detect': { input: z.undefined(), output: legacyDetectSchema },
+  'legacy:import': {
+    input: z.object({ includeSamples: z.boolean() }),
+    output: legacyImportResultSchema,
+  },
 } as const;
 
 export type IpcChannel = keyof typeof ipcContract;

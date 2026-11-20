@@ -19,6 +19,7 @@ No test hits the live network. The shared HTTP client has a test mode that fails
 ## Fixtures
 
 - `tests/fixtures/sources/<connector>/`: recorded API responses, including pagination, empty boards, and error responses. Re-recorded with `pnpm fixtures:record <connector>` (live, manual, reviewed before commit).
+- `tests/fixtures/legacy/`: a jobowl 0.1 `applications.json` with the three first-launch samples, a real-looking entry with history, and one with an unknown status and a bad date.
 - `tests/fixtures/resumes/`: sample resumes (PDF single column, PDF two-column, DOCX, plain text) for fictional people. Never a real person's resume.
 - `tests/fixtures/postings/`: job postings, including ones with prompt-injection text, missing fields, salary in odd formats, and email-only application instructions.
 - `tests/fixtures/forms/`: saved HTML of Greenhouse, Lever and Ashby forms and a few generic forms.

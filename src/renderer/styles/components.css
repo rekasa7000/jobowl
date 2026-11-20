@@ -101,3 +101,226 @@
   background: var(--accent);
   color: var(--on-accent);
 }
+
+/* ── Buttons ── */
+.btn-ink,
+.btn-ghost,
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  padding: 0.6rem 1.25rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.btn-ink {
+  background: var(--accent);
+  color: var(--on-accent);
+  border: 1.5px solid var(--text-primary);
+  box-shadow: 4px 4px 0 var(--shadow-hard);
+}
+.dark .btn-ink {
+  border-color: var(--accent);
+}
+.btn-ghost {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-strong);
+}
+.btn-danger {
+  background: var(--bg-secondary);
+  color: var(--danger);
+  border: 1.5px solid var(--danger);
+}
+.btn-ink:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--shadow-hard);
+}
+.btn-ghost:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--accent-2);
+}
+.btn-danger:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--danger);
+}
+.btn-ink:active,
+.btn-ghost:active,
+.btn-danger:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--shadow-hard);
+}
+.btn-ink:disabled,
+.btn-ghost:disabled,
+.btn-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Forms ── */
+.field-label {
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.input {
+  width: 100%;
+  min-height: 40px;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font: inherit;
+}
+.input:hover {
+  border-color: var(--text-secondary);
+}
+.input[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+textarea.input {
+  resize: vertical;
+  line-height: 1.55;
+}
+.field-error {
+  margin-top: 0.35rem;
+  font-size: 0.8125rem;
+  color: var(--danger);
+}
+
+/* ── Status badge: label plus a mark, so colour is never the only signal ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge::before {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+.badge-interview {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+.badge-offer {
+  color: var(--signal);
+}
+.badge-applied {
+  color: var(--accent-2);
+}
+.badge-draft {
+  color: var(--text-primary);
+  border-style: dashed;
+  border-color: var(--accent-3);
+}
+.badge-draft::before {
+  background: var(--accent-3);
+}
+.badge-rejected {
+  color: var(--text-tertiary);
+  border-color: transparent;
+}
+.badge-rejected::before {
+  background: transparent;
+  border: 1.5px solid currentColor;
+}
+.badge-withdrawn {
+  color: var(--text-tertiary);
+  border-style: dashed;
+}
+.badge-withdrawn::before {
+  background: transparent;
+  border: 1.5px dashed currentColor;
+}
+
+/* ── List rows ── */
+.row-link {
+  display: block;
+  position: relative;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+.row-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 18%;
+  bottom: 18%;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.row-link:hover {
+  background: var(--bg-hover);
+}
+.row-link:hover::before,
+.row-link[aria-current='page']::before {
+  transform: scaleY(1);
+}
+.row-link[aria-current='page'] {
+  background: var(--bg-hover);
+}
+
+/* ── Timeline ── */
+.timeline li {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+.timeline li + li {
+  border-top: 1px dashed var(--border-color);
+}
+
+/* ── Dialog ── */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(1, 20, 19, 0.6);
+  animation: fade 0.2s ease;
+}
+.dialog-content {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: min(30rem, calc(100vw - 2rem));
+  transform: translate(-50%, -50%);
+  padding: 1.75rem;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-strong);
+  border-radius: 14px;
+  box-shadow: 8px 8px 0 var(--shadow-hard);
+  animation: drop 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% - 12px));
+  }
+}
