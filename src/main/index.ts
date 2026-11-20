@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import { app, BrowserWindow, shell, type IpcMainInvokeEvent } from 'electron';
+import { app, BrowserWindow, safeStorage, shell, type IpcMainInvokeEvent } from 'electron';
 import { openDb } from './db/open';
 import { registerIpc } from './ipc/register';
 import { dataPaths } from './paths';
@@ -86,6 +86,12 @@ async function main(): Promise<void> {
     dataDir: dataRoot,
     // jobowl 0.1 wrote to the config folder, which is %APPDATA% on Windows.
     legacyFile: join(app.getPath('appData'), 'job-tracker', 'applications.json'),
+    // Windows encrypts keys for this user account (DPAPI). Without it, keys aren't stored at all.
+    cipher: {
+      isAvailable: () => safeStorage.isEncryptionAvailable(),
+      encrypt: (plain) => safeStorage.encryptString(plain),
+      decrypt: (encrypted) => safeStorage.decryptString(encrypted),
+    },
     isTrusted,
   });
 

@@ -1,5 +1,15 @@
 import { z } from 'zod';
 import {
+  aiStatusSchema,
+  clearKeySchema,
+  listModelsSchema,
+  modelInfoSchema,
+  setKeySchema,
+  spendSchema,
+  testModelSchema,
+  testResultSchema,
+} from './schemas/ai';
+import {
   applicationDetailSchema,
   applicationSchema,
   createApplicationSchema,
@@ -31,6 +41,12 @@ export const ipcContract = {
   'applications:create': { input: createApplicationSchema, output: applicationDetailSchema },
   'applications:update': { input: updateApplicationSchema, output: applicationDetailSchema },
   'applications:delete': { input: idSchema, output: z.undefined() },
+  'ai:status': { input: z.undefined(), output: aiStatusSchema },
+  'ai:set-key': { input: setKeySchema, output: aiStatusSchema },
+  'ai:clear-key': { input: clearKeySchema, output: aiStatusSchema },
+  'ai:models': { input: listModelsSchema, output: z.array(modelInfoSchema) },
+  'ai:test': { input: testModelSchema, output: testResultSchema },
+  'ai:spend': { input: z.undefined(), output: spendSchema },
   'profile:get': { input: z.undefined(), output: savedProfileSchema.nullable() },
   'profile:versions': { input: z.undefined(), output: z.array(profileVersionSchema) },
   'profile:save': { input: saveProfileSchema, output: savedProfileSchema },
