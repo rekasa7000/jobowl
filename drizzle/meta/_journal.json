@@ -29,6 +29,13 @@
       "when": 1795198746846,
       "tag": "0003_secrets_and_ai_calls",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1795201179251,
+      "tag": "0004_discovery",
+      "breakpoints": true
     }
   ]
 }
