@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ipcContract } from '@shared/ipc-contract';
+import { defaultSettings } from '@shared/schemas/settings';
 
 describe('ipc contract', () => {
   it('accepts a valid settings patch and an empty one', () => {
@@ -18,7 +19,7 @@ describe('ipc contract', () => {
   });
 
   it('fills defaults when reading stored settings', () => {
-    expect(ipcContract['settings:get'].output.parse({})).toEqual({ theme: 'dark' });
+    expect(ipcContract['settings:get'].output.parse({})).toEqual(defaultSettings);
   });
 
   it('rejects an unknown theme', () => {

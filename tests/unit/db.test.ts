@@ -10,6 +10,7 @@ import {
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { defaultSettings } from '@shared/schemas/settings';
 import { dailyBackup } from '../../src/main/db/backup';
 import { openDb, type Db } from '../../src/main/db/open';
 import { readSettings, writeSettings } from '../../src/main/db/settings-repo';
@@ -95,16 +96,26 @@ describe('dailyBackup', () => {
 describe('settings repository', () => {
   it('returns defaults when nothing is stored', async () => {
     db = await openDb(dataPaths(root), migrations);
-    expect(readSettings(db)).toEqual({ theme: 'dark' });
+    expect(readSettings(db)).toEqual(defaultSettings);
   });
 
   it('persists updates across a reopen', async () => {
     db = await openDb(dataPaths(root), migrations);
-    expect(writeSettings(db, { theme: 'light' })).toEqual({ theme: 'light' });
+    expect(writeSettings(db, { theme: 'light' })).toEqual({ ...defaultSettings, theme: 'light' });
     db.close();
 
     db = await openDb(dataPaths(root), migrations);
     expect(readSettings(db).theme).toBe('light');
+  });
+
+  it('stores the AI choices and keeps the theme when only they change', async () => {
+    db = await openDb(dataPaths(root), migrations);
+    writeSettings(db, { theme: 'light' });
+    const ai = {
+      ...defaultSettings.ai,
+      layers: { parser: { provider: 'ollama' as const, model: 'llama3.1' } },
+    };
+    expect(writeSettings(db, { ai })).toEqual({ theme: 'light', ai });
   });
 
   it('falls back to the default when a stored value is corrupt', async () => {
