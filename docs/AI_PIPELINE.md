@@ -92,8 +92,7 @@ Uses the `ollama` JS client against `http://127.0.0.1:11434` (configurable).
 
 ### Parser
 
-*Built in M2.* 
-Input: plain text from the resume (layout lost). Output: a `Profile` draft where every item has `confidence: 'high' | 'low'`. The UI shows low-confidence items highlighted. Nothing becomes the profile until the user saves it.
+*Built in M2.* Input: plain text from the resume (layout lost), inside data tags. Output: plain, all-required fields (`""` means "not stated"). A draft builder then gives every item an id, reads dates, and compares each employer, title, school and bullet with the resume text; anything it can't find word for word, and anything the model marked uncertain, is listed in `lowConfidence` and shown with a red bar in the review. Nothing becomes the profile until the user saves it.
 
 Dates the Parser can't determine are left empty, not guessed.
 
