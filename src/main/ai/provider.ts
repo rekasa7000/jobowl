@@ -69,8 +69,9 @@ export class TruncatedError extends ModelError {
 
 /** Plain JSON Schema for a layer's output, for providers that take one directly. */
 export function jsonSchemaOf(schema: z.ZodType): Record<string, unknown> {
-  const { $schema: _ignored, ...rest } = z.toJSONSchema(schema) as Record<string, unknown>;
-  return rest;
+  const json = { ...z.toJSONSchema(schema) } as Record<string, unknown>;
+  delete json['$schema'];
+  return json;
 }
 
 /** A layer has no model chosen, or its provider has no key yet. The message says what to do. */
