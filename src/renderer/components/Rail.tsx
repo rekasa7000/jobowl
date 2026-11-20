@@ -3,6 +3,7 @@ import logo from '../jobowl.svg';
 
 const ITEMS = [
   { to: '/applications', label: 'Applications' },
+  { to: '/profile', label: 'Profile' },
   { to: '/settings', label: 'Settings' },
 ] as const;
 
